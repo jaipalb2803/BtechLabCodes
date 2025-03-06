@@ -1,0 +1,830 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**List of Experiments **/
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+Compiler Design Experiments
+
+1. Write a LEX Program to scan reserved word & Identifiers of C Language
+
+%{
+    #include<stdio.h>
+    int k=0,i=0,c=0,O=0;
+%}
+%%
+    "if"|"else"|"for"|"while"|"do"|"switch"|"case"|"break"|"continue"|"int"|"float"|"char"|"struct"{
+      printf("%s is keyword",yytext);
+      k++;
+   }
+   [a-zA-Z][0-9a-zA-Z]*{
+      printf("%s is identifier",yytext);
+      i++;
+   }
+    [0-9]+{
+      printf("%s is constant",yytext);
+      c++;
+   }
+   "="|"+"|"-"|"*"|"/"|"%"|"=="|"<="|">="{
+      printf("%s is operator",yytext);
+      o++;
+   }
+%%
+int main(){
+   printf("Enter String:");
+   yylex();
+   printf("%d keywords,%d identifier,%d constant,%d operator",k,i,c,o);
+}
+int yywrap(){
+   return 1;
+}
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+program/Cdlab/lex recogIdf.l
+program/Cdlab/gcc lex.yy.c
+program/Cdlab/./a.out
+
+Enter string: int y=2024
+int is keyword
+y is identifier
+= is operator
+2024 is constant
+1 keywords,1 identifier,1 constant,1 operator
+-----------------------------------------------------------------------------------------------------------------------------------------
+2. Implement Predictive Parsing algorithm
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define N 64
+
+typedef struct Prd{
+    char v,w[N];
+}Prd;
+
+void readProd(Prd P[],int n)
+{
+    int r=0,j;
+    while(n!=0){
+        char s[N];
+        printf("Enter %d production:",r+1);
+        scanf("%s",s);
+        for(int i=0;i<strlen(s);i++)
+        {
+          if(s[i]!='-'&s[i]!='>'){
+            if(i==0)
+               P[r].v=s[i],j=0;
+            else
+               P[r].w[j]=s[i],j++;
+          }
+        }
+        P[r].w[j]='\0';
+        n--,r++;
+    }
+}
+int readFirstFollow(Prd P[],int n,Prd F[],Prd f[],char R[]){
+    int count=0; 
+    for(int i=0;i<n;i++){
+      if(i==0){
+          printf("First(%c)=",P[i].v);
+          scanf("%s",F[count].w);
+          printf("Follow(%c)=",P[i].v);
+          scanf("%s",f[count].w);
+          R[count]=P[i].v;
+          count++;
+      }
+      else if(P[i].v!=P[i-1].v){
+        printf("\nFirst(%c)=",P[i].v);
+        scanf("%s",F[count].w);
+        printf("Follow(%c)=",P[i].v);
+        scanf("%s",f[count].w);
+        R[count]=P[i].v;
+        count++;
+      }      
+    }
+    return count;
+}
+int IsAbs(char S[],char c){
+   int flag=1;
+   for(int i=0;i<strlen(S);i++)
+       if(S[i]==c){
+          flag=0;
+          break;
+       }
+     return flag;  
+}
+int GetTerminal(Prd P[],int n,char col[]){
+   int i,c=0;
+     for(i=0;i<n;i++){
+        for(int j=0;j<strlen(P[i].w);j++)
+        {
+          if(!(P[i].w[j]>='A' && P[i].w[j]<='Z') && IsAbs(col,P[i].w[j]) && P[i].w[j]!='#' )
+              col[c]=P[i].w[j],c++;       
+        }
+     } 
+   col[c]='$';   
+   return c;
+}
+void ParseTable(Prd F[],Prd f[],Prd P[],char col[],char row[],int r,int c){
+      for(int i=0;i<=c;i++)
+         printf("\t%c\t",col[i]);
+      printf("\n"); 
+      for(int i=0,j=0;i<r;i++){
+         printf("%c ",row[i]);
+         for(int j1=0;j1<strlen(F[i].w);j1++)
+         {
+            if(F[i].w[j1]!=','&F[i].w[j1]!='#'&P[j].v==row[i]){
+                printf("\t%c->%s\t",P[j].v,P[j].w);
+                j++;
+            }
+            else if(F[i].w[j1]=='#'){
+                 for(int j2=0;j2<strlen(f[i].w);j2++){
+                    if(f[i].w[j2]!=','&P[j].v==row[i]){
+                        printf("\t%c->%s\t",P[j].v,P[j].w);
+                    }
+                 }
+                 j++;break;
+            }
+         }
+        printf("\n");       
+      }
+      
+}
+int main(){
+    int n,r,c;
+    printf("Enter no.of production=");
+    scanf("%d",&n);
+
+    Prd P[n],first[n],follow[n];
+    readProd(P,n);
+   
+    char row[n];
+    char *col=(char*)calloc(n,sizeof(char));
+    
+    r=readFirstFollow(P,n,first,follow,row);
+    c=GetTerminal(P,n,col);
+    
+    ParseTable(first,follow,P,col,row,r,c);  
+   
+}
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter no.of production=4
+Enter 1 production:S->AaAb
+Enter 2 production:S->BbBa
+Enter 3 production:A->#
+Enter 4 production:B->#
+First(S)=a,b
+Follow(S)=$
+
+First(A)=#
+Follow(A)=a,b
+
+First(B)=#
+Follow(B)=a,b
+        a               b               $
+S       S->AaAb         S->BbBa
+A       A->#            A->#
+B       B->#            B->#
+
+OUTPUT-2:
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+Enter no.of production=2
+Enter 1 production:S->(S)
+Enter 2 production:S->#
+First(S)=(,#
+Follow(S)=),$
+        (               )               $
+S       S->(S)       S->#            S->#
+-----------------------------------------------------------------------------------------------------------------------------------------
+3. Write a C program to generate three address code.
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define N 40
+
+void push(char stk[],char ele,int *t)
+{
+		*t=*t+1;
+		stk[*t]=ele;	
+}
+char pop(char stk[],int *t)
+{
+		char ch;
+		ch=stk[*t];
+		(*t)--;
+		return ch;
+}
+int inPrec(char ch)
+{
+		switch(ch)
+		{
+		    case 0 : return 0;
+		             break;	
+		    case '+': return 1;
+			     break;
+		    case '-': return 1;
+			     break;
+		    case '*': return 3;
+			     break;
+		    case '/': return 3;
+			     break;
+		    case '^': return 6;
+			     break;
+		}
+}
+int stackPrec(char ch)
+{
+		switch(ch)
+		{
+		    case 0: return 0;
+			  break;		
+		    case '+': return 2;
+			  break;
+		    case  '-': return 2;
+			  break;
+		   case '/': return 4;
+			  break;
+		   case '*': return 4;
+			  break;
+		   case  '^': return 5;
+			  break;
+		   default:return 0;            
+		}
+}
+void  TACgenerator(char *str)
+{
+	  char *S1=(char*)calloc(N,sizeof(char)),S2[N],var1,var2,optr,c='0';
+	  int top1=0,top2=0;
+
+	  for(int i=0;i<strlen(str)-1;i++)
+	  {
+	  	if(str[i]>='a'&& str[i]<='z')
+	 	{
+	  	  push(S2,str[i],&top2);	  			
+	        }
+	 	else if( inPrec(str[i])>stackPrec(S1[top1]) )
+	        {
+	 	    push(S1,str[i],&top1);
+	 	}
+	 	else if( inPrec(str[i])<=stackPrec(S1[top1]))
+	 	{
+	 	   optr=pop(S1,&top1);
+                   var1=pop(S2,&top2);
+                   var2=pop(S2,&top2);
+	           c++;
+                   printf("t%c = %c %c %c\n",c,var1,optr,var2);
+        
+        	  while(top1)
+	          {
+                     optr=pop(S1,&top1);
+            	     var1=pop(S2,&top2);
+	 	     c++;
+                     printf("t%c = %c %c t%c\n",c,var1,optr,c-1);
+                     push(S2,c,&top2);
+	          }	
+                  push(S1,str[i],&top1);
+	      }   
+	  }
+	  while(top1)
+	  {
+            optr=pop(S1,&top1);
+            var1=pop(S2,&top2);
+            var2=pop(S2,&top2);
+	    c++;
+           (c=='1')? printf("t%c = %c %c %c\n",c,var2,optr,var1):printf("t%c = t%c %c %c\n",c,c-1,optr,var1);      
+        
+        }
+}
+int main()
+{
+	 char Exp[N];
+	
+	 printf("Enter infix expression:");
+	 fgets(Exp,N,stdin);
+	 
+	 TACgenerator(Exp);
+}  
+
+OUTPUT-1:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter infix expression:a+b-c
+t1 = b + a
+t2 = t1 - c
+
+Enter infix expression:a*b-c
+t1 = b * a
+t2 = t1 - c
+
+Enter infix expression:a+b*c-d
+t1 = c * b
+t2 = a + t1
+t3 = t2 - d
+-----------------------------------------------------------------------------------------------------------------------------------------
+4. Implement SLR(1) Parsing algorithm
+	 
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define N 64
+
+typedef struct Prd{
+    char v,w[N];
+}Prd;
+
+void readProd(Prd P[],int n)
+{
+    int r=0,j;
+    while(n!=0){
+        char s[N];
+        printf("Enter %d production:",r+1);
+        scanf("%s",s);
+        for(int i=0;i<strlen(s);i++)
+        {
+          if(s[i]!='-'&s[i]!='>'){
+            if(i==0)
+               P[r].v=s[i],j=0;
+            else
+               P[r].w[j]=s[i],j++;
+          }
+        }
+        P[r].w[j]='\0';
+        //printf("\n%c->%s\n",P[r].v,P[r].w);
+        n--,r++;
+    }
+}
+int getNonTerminal(Prd P[],int n,int c,char R[]){
+   
+    for(int i=0;i<n;i++){
+      if(i==0){     
+          R[c]=P[i].v;
+          c++;
+       }
+       else if(P[i].v!=P[i-1].v){
+         R[c]=P[i].v;
+         c++;
+       }      
+    }
+    return c;
+}
+int IsAbs(char S[],char c){
+   int flag=1;
+   for(int i=0;i<strlen(S);i++)
+       if(S[i]==c){
+          flag=0;
+          break;
+       }
+     return flag;  
+}
+int GetTerminal(Prd P[],int n,char col[]){
+   int i,c=0;
+     for(i=0;i<n;i++){
+        for(int j=0;j<strlen(P[i].w);j++)
+        {
+          if(!(P[i].w[j]>='A' && P[i].w[j]<='Z') & IsAbs(col,P[i].w[j]) & P[i].w[j]!='#' )
+              col[c]=P[i].w[j],c++;       
+        }
+     } 
+   col[c]='$';   
+   return c;
+}
+void ParseTable(char col[],int r,int c,Prd PT[r][c]){
+    
+	  int a[r][c],n,j1;
+	  
+      for(int i=0;i<r;i++){
+	 j1=0;
+         printf("Enter no of Prod Item-%d=",i);
+	 scanf("%d",&n);
+	 printf("Enter item ProdNumber=");
+         for(int j=0;j<n;j++)
+            scanf("%d",&a[i][j]);
+	 getchar();	
+	 printf("Enter item Production=");
+	 for(int j=0;j<n;j++)
+            scanf("%s",PT[i][a[i][j]].w);	
+         for(int j=0;j<=c;j++)
+            if(j!=a[i][j1])
+	        PT[i][j].w[N]="X\0",j1++;		
+	    printf("\n");				
+      }  
+
+      for(int i=0;i<=c;i++)
+         printf("\t%c",col[i]);
+      printf("\n");
+      for(int i=0;i<r;i++)
+      {
+	  for(int j=0;j<c;j++)
+		(j==0)?printf("\nI%d\t%s",i,PT[i][j].w):printf("\t%s",PT[i][j].w);
+			 
+      }	   
+}
+int main(){
+    int n,r,c;
+    printf("Enter no.of production=");
+    scanf("%d",&n);
+
+    Prd P[n],parTbl[N][N];
+    readProd(P,n);   
+    printf("Enter no.of Items=");
+    scanf("%d",&r);
+    char* col=(char*)calloc(N,sizeof(char));
+     
+    c=GetTerminal(P,n,col);
+    c=getNonTerminal(P,n,c+1,col);
+    
+    ParseTable(col,r,c,parTbl);
+   
+}
+
+OUTPUT-1:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter no.of production=1
+Enter 1 production:S->aS
+Enter no.of Items=2
+Enter no of Prod Item-0=2
+Enetr item ProdNumber=0 2
+Enetr item Production=S2 1
+
+Enter no of Prod Item-1=1
+Enetr item ProdNumber=1
+Enetr item Production=AC
+
+	a	$	S	
+
+I0	S2		1
+I1		AC
+
+OUTPUT-2:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter no.of production=2
+Enter 1 production:S->aSbS
+Enter 2 production:S->c
+Enter no.of Items=7
+Enter no of Prod Item-0=3
+Enetr item ProdNumber=0 2 4
+Enetr item Production=S2 S3 1
+
+Enter no of Prod Item-1=1
+Enetr item ProdNumber=3
+Enetr item Production=AC
+
+Enter no of Prod Item-2=3
+Enetr item ProdNumber=0 2 4
+Enetr item Production=S2 S3 4
+
+Enter no of Prod Item-3=2
+Enetr item ProdNumber=1 3
+Enetr item Production=r2 r2
+
+Enter no of Prod Item-4=1
+Enetr item ProdNumber=1
+Enetr item Production=S5
+
+Enter no of Prod Item-5=3
+Enetr item ProdNumber=0 2 4
+Enetr item Production=S2 S3 6
+
+Enter no of Prod Item-6=2
+Enetr item ProdNumber=1 3
+Enetr item Production=r1 r1
+
+        a       b       c       $       S
+
+I0      S2              S3              1
+I1                              AC
+I2      S2              S3              4
+I3              r2              r2
+I4              S5
+I5      S2              S3              6
+I6              r1              r1
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+5. Design LALR bottom up parser for the given language ?
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+1.write a lexical program to idenlify number in the input string.
+
+PROGRAM :
+
+%{
+	#include<stdio.h>
+%}
+
+%%
+[0-9]* {printf("%s is a number.",yytext);}
+. ;
+%%
+
+int main()
+{
+	printf("enter a string : ");
+	yylex();
+}
+int yywrap()
+{
+	return 1;
+}
+
+OUTPUT :
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+aiml@aiml-HP-Pro:~$ lex sample.l
+aiml@aiml-HP-Pro:~$ gcc lex.yy.c
+aiml@aiml-HP-Pro:~$ ./a.out
+enter a string : NIT99
+99 is a number.
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+2.write a lexical program to count number of vowels and consonanls in agiven input string.
+
+PROGRAM:
+
+%{
+     #include<stdio.h>
+     int i,v,c;   
+%}
+
+%%
+    [A-za-z]*[\t\n]{
+     v=0,c=0;
+     for(i=0;i<=yyleng;i++)
+        if(yytext[i]='A'||yytext[i]='E'||yytext[i]='I'||yytext[i]='O'||yytext[i]='U'){
+		    v++;
+	}else if(yytext[i]='a'||yytext[i]='e'||yytext[i]='i'||yytext[i]='o'||yytext[i]='u'){
+		    v++;
+	}else{
+       	            c++;
+        }
+     printf("No.of vowels=%d\n",v); 
+     printf("No.of Consonents=%d\n",c);   
+    }
+. ;
+%%
+int main()
+{
+     printf("Enter the input=");
+     yylex();
+}
+int yywrap(){
+    return 1;
+}
+
+OUTPUT :
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter the input=jntuhces
+No.of vowels=2
+No.of Consonents=6
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+3.write a lex program to identify capital string in input string.
+
+PROGRAM:
+%{
+	#include<stdio.h>
+%}
+%%
+[A-Z]*  {printf("%s\n",yytext);}
+. ;
+%%
+
+int main()
+{
+	printf("enter a string : ");
+	yylex();
+}
+int yywrap() 
+{
+	return 1;
+}
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+aiml@aiml-HP-Pro:~$ lex sample.l
+aiml@aiml-HP-Pro:~$ gcc lex.yy.c
+aiml@aiml-HP-Pro:~$ ./a.out
+enter a string : Nithin
+N
+-----------------------------------------------------------------------------------------------------------------------------------------
+4.write a lex program to replace name with capital letters in i/p string.
+
+PROGRAM:
+
+%{
+     #include<stdio.h>
+     int i,v,c;   
+%}
+
+%%
+    [A-za-z]*{
+        for(i=0;i<=yyleng;i++)
+        if((yytext[i]='j'||yytext[i]='J') && (yytext[i+1]='a'||yytext[i+1]='A') && (yytext[i+2]='i'||yytext[i+2]='I')){
+		 for(i=0;i<=3;i++){
+			if(yytext[i+j]>='a' && yytext[i+j]<='z')
+				yytext[i+j]-=32;
+		 } 
+        }
+        printf("%s",yytext);
+    }
+. ;
+%%
+int main()
+{
+     printf("Enter the input=");
+     yylex();
+}
+int yywrap(){
+    return 1;
+}
+
+OUTPUT :
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter the input=This is jai
+This is JAI
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+5.write a lex program to convert small to capital aplabets?
+
+PROGRAM:
+
+%{
+#include <stdio.h>
+%}
+
+%%
+[a-z]    { putchar(yytext[0] - 32); }  // Convert to uppercase
+\n       { putchar('\n'); }            // Print newline as is
+.        { putchar(yytext[0]); }       // Print all other characters as is
+%%
+
+int main()
+{
+    printf("enter a convert small :");
+    yylex();
+}
+int yywrap(){
+	return 1;
+}
+
+OUTPUT :
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+aiml@aiml-HP-Pro:~$ lex cd.l
+aiml@aiml-HP-Pro:~$ gcc lex.yy.c
+aiml@aiml-HP-Pro:~$ ./a.out
+enter a convert small :nithin
+NITHIN
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+6.write a lex program to convert capital to small letters.
+
+PROGRAM :
+
+%{
+#include <stdio.h>
+%}
+
+%%
+[A-Z]    { putchar(yytext[0] + 32); }  
+\n       { putchar('\n'); }            
+.        { putchar(yytext[0]); }       
+%%
+
+int main()
+{
+    printf("enter a string :");
+    yylex();
+}
+int yywrap(){
+	return 1;
+}
+
+OUTPUT :
+-----------------------------------------------------------------------------------------------------------------------------------------
+aiml@aiml-HP-Pro:~$ lex cd.l
+aiml@aiml-HP-Pro:~$ gcc lex.yy.c
+aiml@aiml-HP-Pro:~$ ./a.out
+enter a string :NITHIN
+nithin
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+7.WALP to identify identifiers,operators,constants & keywords of C language in given i/p string.
+
+%{
+    #include<stdio.h>
+    int k=0,i=0,c=0,O=0;
+%}
+%%
+   "if"|"else"|"for"|"while"|"do"|"switch"|"case"|"break"|"continue"|"int"|"float"|"char"|"struct"{
+      printf("%s is keyword",yytext);
+      k++;
+   }
+   [a-zA-Z][0-9a-zA-Z]*{
+      printf("%s is identifier",yytext);
+      i++;
+   }
+    [0-9]+{
+      printf("%s is constant",yytext);
+      c++;
+   }
+     "="|"+"|"-"|"*"|"/"|"%"|"=="|"<="|">="{
+      printf("%s is operator",yytext);
+      o++;
+   }
+   . ;
+%%
+int main(){
+   printf("Enter String:");
+   yylex();
+   printf("%d keywords,%d identifier,%d constant,%d operator",k,i,c,o);
+}
+int yywrap(){
+   return 1;
+}
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+program/Cdlab/lex cd.l
+program/Cdlab/gcc lex.yy.c
+program/Cdlab/./a.out
+
+Enter string: int y=2024
+int is keyword
+y is identifier
+= is operator
+2024 is constant
+1 keywords,1 identifier,1 constant,1 operator
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+8. Write a Lex programe to count no.of lines,words and charecters in given input
+
+%{
+  #include<stdio.h>
+  #include<string.h>
+  int l=1,w=0,c=0; 
+%}
+%%
+\n {l++;c++;}
+[ \t]+ {w++;}
+[a-zA-Z]+ {w++;c+=strlen(yytext);}
+. {c++;
+  printf("%d lines %d words %d charecters",l,w,c);
+  exit(0);
+ }
+%%
+int main(){
+     printf("Enter the input=");
+     yylex();
+     
+}
+int yywrap(){
+     return 1;
+}
+
+
+OUTPUT :
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+jaipal@BadavathJaipal:/mnt/c/Users/Dell/OneDrive/Documents/C++ programe/cpp$ lex a.l
+jaipal@BadavathJaipal:/mnt/c/Users/Dell/OneDrive/Documents/C++ programe/cpp$ gcc lex.yy.c
+jaipal@BadavathJaipal:/mnt/c/Users/Dell/OneDrive/Documents/C++ programe/cpp$ ./a.out
+Enter the input=hi this
+jai
+.
+3 lines 4 words 12 charecters
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+%{
+	#include<stdio.h>
+	int k=0,i=0,c=0,o=0;
+%}
+
+%%
+"int"|"char"|"if"|"else" {
+	printf("%s is keyword\n",yytext);
+	k++;
+}
+[a-zA-Z][0-9a-zA-Z]* {
+	printf("%s is identifier\n",yytext);
+	i++;
+}
+[0-9]+ {
+	printf("%s is constantn",yytext);
+	c++;
+} 
+"+"|"-"|"/"|"*"|"=" {
+	printf("%s is operator\n",yytext);
+	o++;
+}
+%%
+
+int main()
+{
+	printf("enter a string : ");
+	yylex();
+	printf("%d keyword,%d identifier,%d constant,%d operator",k,i,c,o);	
+}
+int yywrap()
+{
+	return 1;
+}
+

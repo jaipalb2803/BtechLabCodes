@@ -1,0 +1,546 @@
+						//*CRYPTOGRAPHY AND NETWORK SECURITY LAB*//
+List of Experiments: 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+1. Write a C program that contains a string (char pointer) with a value ‘Hello world’. The program 
+should XOR each character in this string with 0 and displays the result.
+
+#include <stdio.h> 
+int main() { 
+    char str[100];  
+    char result[100];  
+    printf("Enter a string: "); 
+    fgets(str, sizeof(str), stdin); 
+    int i;  
+    for (i = 0; str[i] != '\0'; i++) { 
+        result[i] = str[i] ^ 0;  
+    } 
+    result[strcspn(result, "\n")] = '\0';  
+    printf("Original string: %s", str); 
+    printf("XOR result: %s\n", result); 
+    return 0; 
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+Enter a string: HELLO
+Original string: HELLO
+XOR result: HELLO
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+2. Write a C program that contains a string (char pointer) with a value ‘Hello world’. The program 
+should AND or and XOR each character in this string with 127 and display the result. 
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    char str[100], and_result[100], xor_result[100];
+    printf("Enter a string: ");
+    fgets(str, sizeof(str), stdin);
+    str[strcspn(str, "\n")] = '\0';  // Remove the newline character
+
+    for (int i = 0; str[i] != '\0'; i++) {
+        and_result[i] = str[i] & 127;
+        xor_result[i] = str[i] ^ 127;
+    }
+
+    and_result[strlen(str)] = xor_result[strlen(str)] = '\0';
+
+    printf("Original string: %s\nAND result: %s\nXOR result: %s\n", str, and_result, xor_result);
+    return 0;
+}
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+Enter a string: hello
+Original string: hello
+AND result: hello
+XOR result: ↨→‼‼►
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+3. Write a Java program to perform encryption and decryption using the following algorithms 
+a. Ceaser cipher  b. Substitution cipher  c. Hill Cipher 
+
+a)  Ceaser cipher 
+ 
+import java.util.*;
+
+public class ceaserCipher{
+           public static final  String TEXT="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+           public static String encryption(String data,int key){
+                      data=data.toUpperCase();
+                      StringBuilder sb=new StringBuilder(data);
+                      for(int i=0;i<data.length();i++){
+		                int pos=TEXT.indexOf(data.charAt(i));
+		                int shift=(pos+key)%26;
+		                sb.setCharAt(i,TEXT.charAt(shift));
+		      }
+		      return sb.toString();	
+           }
+          public static String decryption(String data,int key){
+                     data=data.toUpperCase();
+                     StringBuilder sb=new StringBuilder(data);
+                      for(int i=0;i<data.length();i++){
+		                int pos=TEXT.indexOf(data.charAt(i));
+		                int shift=(pos-key)%26;
+		                sb.setCharAt(i,TEXT.charAt(shift));
+		      }
+		      return sb.toString();	 
+           }
+          public static void main(String[] args){
+		    Scanner sc=new Scanner(System.in);
+		    System.out.print("Enter the Text=");
+		    String data=sc.nextLine();
+		    System.out.print("Enter the key=");
+		    int key=sc.nextInt();
+	        System.out.println("Encrypted Text="+(data=encryption(data,key)));
+	        System.out.println("Decrypted Text="+decryption(data,key));
+		                                 
+          }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+Enter the Text=hello
+Enter the key=9
+Encrypted Text=QNUUX
+Decrypted Text=HELLO
+------------------------------------------------------------------------------------------------------------------------------------------------------
+b. Substitution cipher
+
+Program: 
+import java.util.Scanner; 
+public class Main { 
+    public static void main(String[] args) { 
+        Scanner scanner = new Scanner(System.in); 
+        System.out.print("Enter a 64-bit key (8 characters): "); 
+        String key = scanner.nextLine(); 
+        System.out.print("Enter plaintext (8 characters): "); 
+        String plaintext = scanner.nextLine(); 
+        String ciphertext = new StringBuilder(plaintext).reverse().toString(); 
+        String decrypted = new StringBuilder(ciphertext).reverse().toString(); 
+        System.out.println("Ciphertext: " + ciphertext); 
+        System.out.println("Decrypted: " + decrypted); 
+        scanner.close(); 
+    } 
+} 
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Enter a 64-bit key (8 characters): 12345678 
+Enter plaintext (8 characters): mysecret 
+Ciphertext: tercesym 
+Decrypted: mysecret 
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+c. Hill Cipher 
+
+import java.util.*;
+
+public class HillCipher {
+    public static final String TEXT = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+    public static void readMatrix(int[][] a, int n, Scanner sc) {
+        System.out.println("Enter key matrix:");
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                a[i][j] = sc.nextInt();
+    }
+
+    public static void matrixMul(int[][] K, int[][] P, int[][] C, int n) {
+        for (int i = 0; i < n; i++) {
+            C[i][0] = 0;
+            for (int k = 0; k < n; k++) C[i][0] += K[i][k] * P[k][0];
+            C[i][0] %= 26;
+        }
+    }
+
+    public static String processText(int[][] K, String text, int n) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < text.length(); i += n) {
+            int[][] P = new int[n][1], C = new int[n][1];
+            for (int j = 0; j < n; j++) P[j][0] = TEXT.indexOf(text.charAt(i + j));
+            matrixMul(K, P, C, n); 
+            for (int j = 0; j < n; j++) sb.append(TEXT.charAt(C[j][0]));
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter n in matrix: ");
+        int n = sc.nextInt();
+        int[][] K = new int[n][n];
+        System.out.print("Enter Key matrix: ");
+        readMatrix(K, n, sc);
+        System.out.print("Enter Plain Text: ");
+        String P = sc.next().toUpperCase();
+
+        if (P.length() % n == 0) {
+            String C = processText(K, P, n);
+            System.out.println("CipherText: " + C);
+            System.out.print("Enter inverse(K) in matrix: ");
+            readMatrix(K, n, sc);
+            System.out.println("PlainText: " + processText(K, C, n));
+        } else {
+            System.out.println("ERROR in PlainText");
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Enter n in matrix: 2
+Enter Key matrix: Enter key matrix:
+3 3 
+2 5
+Enter Plain Text: text
+CipherText: RGWL
+Enter inverse(K) in matrix: Enter key matrix:
+15 17
+20 9
+PlainText: TEXT
+------------------------------------------------------------------------------------------------------------------------------------------------------
+4. Write a C/JAVA program to implement the DES algorithm logic.
+
+import javax.crypto.*;
+import java.util.*;
+
+public class DES {
+    public static void main(String[] args) throws Exception {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter plainText: ");
+        String plainText = sc.nextLine();
+        
+        KeyGenerator keyGenerator = KeyGenerator.getInstance("DES");
+        keyGenerator.init(56); // Initialize the key generator with a key size
+        SecretKey key = keyGenerator.generateKey(); // Generate the key
+        
+        Cipher cipher = Cipher.getInstance("DES");
+
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        byte[] encryptedData = cipher.doFinal(plainText.getBytes());
+
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        String decryptedText = new String(cipher.doFinal(encryptedData));
+
+        System.out.println("Plain Text: " + plainText);
+        System.out.println("Encrypted Text: " + Base64.getEncoder().encodeToString(encryptedData));
+        System.out.println("Decrypted Text: " + decryptedText);
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Enter plainText: Hello
+Plain Text: Hello
+Encrypted Text: YU0CW7edYdQ=
+Decrypted Text: Hello
+------------------------------------------------------------------------------------------------------------------------------------------------------
+5. Write a C/JAVA program to implement the Blowfish algorithm logic. 
+
+import javax.crypto.*;
+import java.util.*;
+
+
+public class Blowfish {
+    public static void main(String[] args) {
+        try {
+            SecretKey secretKey = KeyGenerator.getInstance("Blowfish").generateKey(); // Generate Key
+            Cipher cipher = Cipher.getInstance("Blowfish");
+
+            System.out.println("Generated Key: " + Base64.getEncoder().encodeToString(secretKey.getEncoded()));
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Enter the plainText: ");
+            String plainText = sc.nextLine();
+
+            // Encrypt
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            String encryptedText = Base64.getEncoder().encodeToString(cipher.doFinal(plainText.getBytes()));
+            System.out.println("Encrypted Text: " + encryptedText);
+
+            // Decrypt
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            String decryptedText = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedText)));
+            System.out.println("Decrypted Text: " + decryptedText);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Generated Key: yYz7lIJNTCvOGL5MLoYLcg==
+Enter the plainText: hello
+Encrypted Text: 97V54gdDHes=
+Decrypted Text: hello
+------------------------------------------------------------------------------------------------------------------------------------------------------
+6. Write a C/JAVA program to implement the Rijndael algorithm logic.
+
+import javax.crypto.*;
+import java.util.*;
+
+public class AES {
+    public static void main(String[] args) {
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.print("Enter the plainText: ");
+            String originalData = sc.nextLine();
+
+            SecretKey secretKey = KeyGenerator.getInstance("AES").generateKey();
+            Cipher cipher = Cipher.getInstance("AES");
+
+            // Encrypt and Decrypt
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey);
+            String encryptedData = Base64.getEncoder().encodeToString(cipher.doFinal(originalData.getBytes()));
+
+            cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            String decryptedData = new String(cipher.doFinal(Base64.getDecoder().decode(encryptedData)));
+
+            System.out.println("Encrypted Data: " + encryptedData);
+            System.out.println("Decrypted Data: " + decryptedData);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Enter the plainText: hello
+Encrypted Data: HVoVTAUMDCfvTO7QPcjCeg==
+Decrypted Data: hello
+------------------------------------------------------------------------------------------------------------------------------------------------------
+7. Write the RC4 logic in Java Using Java cryptography; encrypt the text “Hello world” using 
+Blowfish. Create your own key using Java key tool.
+
+import javax.crypto.*;
+import java.util.*;
+
+public class RC4 {
+    public static byte[] encryptRC4(String text, String key) {
+        byte[] S = new byte[256], T = key.getBytes(), data = text.getBytes();
+        for (int i = 0, j = 0; i < 256; i++) {
+            S[i] = (byte) i;
+            j = (j + S[i] + T[i % T.length]) & 0xFF;
+            byte temp = S[i];
+            S[i] = S[j];
+            S[j] = temp;
+        }
+        for (int i = 0, j = 0, k = 0; k < data.length; k++) {
+            i = (i + 1) & 0xFF; 
+            j = (j + S[i]) & 0xFF;
+            byte temp = S[i];
+            S[i] = S[j]; 
+            S[j] = temp;
+            data[k] ^= S[(S[i] + S[j]) & 0xFF];
+        }
+        return data;
+    }
+
+    public static byte[] encryptBlowfish(String text, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance("Blowfish");
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(text.getBytes());
+    }
+
+    public static void main(String[] args) throws Exception {
+        String rc4Text = "Hello world", rc4Key = "SimpleKey";
+        System.out.println("RC4 Encrypted: " + new String(encryptRC4(rc4Text, rc4Key)));
+
+        SecretKey blowfishKey = KeyGenerator.getInstance("Blowfish").generateKey();
+        System.out.println("Blowfish Encrypted: " + new String(encryptBlowfish(rc4Text, blowfishKey)));
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+RC4 Encrypted: Hell# \o   
+Blowfish Encrypted:    "b  K r  Ǐ
+------------------------------------------------------------------------------------------------------------------------------------------------------
+8. Write a Java program to implement RSA algorithm.
+
+import java.util.*;
+
+public class RSA {
+    public static double gcd(double a, double b) {
+        while (b != 0) {
+            double temp = a % b;
+            a = b;
+            b = temp;
+        }
+        return a;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter values of p, q, e, k, m: ");
+        double p = sc.nextDouble(), q = sc.nextDouble(), e = sc.nextDouble(), k = sc.nextDouble(), msg = sc.nextDouble();
+        
+        double n = p * q, phi = (p - 1) * (q - 1);
+        while (gcd(e, phi) != 1) e++;
+        
+        double d = (1 + k * phi) / e;
+        double c = Math.pow(msg, e) % n;
+        double m = Math.pow(c, d) % n;
+
+        System.out.println("Encrypted data = " + c);
+        System.out.println("Original Message Sent = " + m);
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Enter values of p, q, e, k, m: 7 17 5 2 12
+Encrypted data = 3.0
+Original Message Sent = 47.0
+------------------------------------------------------------------------------------------------------------------------------------------------------
+9. Implement the Diffie-Hellman Key Exchange mechanism using HTML and JavaScript. 
+
+import java.util.*;
+
+public class DiffieHellman {
+
+    public static int keyGenerate(int base, int privateKey, int mod) {
+        return (int) Math.pow(base, privateKey) % mod;
+    }
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter Public keys (P, G): ");
+        int P = sc.nextInt(), G = sc.nextInt();
+
+        System.out.print("Enter Private keys (a, b): ");
+        int a = sc.nextInt(), b = sc.nextInt();
+
+        int x = keyGenerate(G, a, P), y = keyGenerate(G, b, P);
+        System.out.println("Generated keys: " + x + " " + y);
+
+        int ka = keyGenerate(y, a, P), kb = keyGenerate(x, b, P);
+        System.out.println(ka == kb ? "Generated secret keys: " + ka : "Failed to generate secret keys");
+    }
+}
+
+//*PR0-2:
+
+<html>
+<head>
+    <title>Diffie-Hellman Key Exchange</title>
+</head>
+<body>
+    <h2>Diffie-Hellman Key Exchange</h2>
+    <label>P: <input id="p" type="number" value="23"></label>
+    <label>G: <input id="g" type="number" value="5"></label><br>
+    <label>a: <input id="a" type="number" value="6"></label>
+    <label>b: <input id="b" type="number" value="15"></label><br>
+    <button onclick="exchange()">Generate Keys</button>
+    <p id="res"></p>
+    <script>
+        const modExp = (b, e, m) => {
+            let r = 1;
+            while (e) {
+                if (e % 2) 
+                    r = (r * b) % m;
+                b = (b * b) % m; 
+                e = Math.floor(e / 2);
+            }
+          return r;
+        };
+        const exchange = () => {
+            const P = +document.getElementById('p').value;
+            const G = +document.getElementById('g').value;
+            const a = +document.getElementById('a').value;
+            const b = +document.getElementById('b').value;
+
+            const x = modExp(G, a, P);
+            const y = modExp(G, b, P);
+            const kx = modExp(y, a, P);
+            const ky = modExp(x, b, P);
+
+            document.getElementById("res").innerHTML = `Keys: x=${x}, y=${y}<br>Shared: k=${kx}<br>` +
+                (kx === ky ? "Success!" : "Failure!");
+        };
+    </script>
+</body>
+</html>
+
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Enter Public keys (P, G): 23 9
+Enter Private keys (a, b): 4 3
+Generated keys: 6 16
+Generated secret keys: 9
+------------------------------------------------------------------------------------------------------------------------------------------------------
+10. Calculate the message digest of a text using the SHA-1 algorithm in JAVA. 
+
+import java.security.MessageDigest;
+
+public class SHA1 {
+    public static void main(String[] args) {
+        try {
+            String text = "Hello world"; // Input text
+            MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+
+            // Compute the digest
+            byte[] hash = sha1.digest(text.getBytes());
+
+            // Convert the byte array to hexadecimal format
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            System.out.println("Original Text: " + text);
+            System.out.println("SHA-1 Hash: " + hexString.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Original Text: Hello world
+SHA-1 Hash: 7b502c3a1f48c8609ae212cdfb639dee39673f5e
+------------------------------------------------------------------------------------------------------------------------------------------------------
+11. Calculate the message digest of a text using the MD5 algorithm in JAVA.
+
+import java.security.MessageDigest;
+
+public class MD5 {
+    public static void main(String[] args) {
+        try {
+            String text = "Hello world"; // Input text
+            MessageDigest md5 = MessageDigest.getInstance("MD5");
+
+            // Compute the digest
+            byte[] hash = md5.digest(text.getBytes());
+
+            // Convert the byte array to hexadecimal format
+            StringBuilder hexString = new StringBuilder();
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
+                if (hex.length() == 1) hexString.append('0');
+                hexString.append(hex);
+            }
+
+            System.out.println("Original Text: " + text);
+            System.out.println("MD5 Hash: " + hexString.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+------------------------------------------------------------------------------------------------------------------------------------------------------
+OUTPUT:
+
+Original Text: Hello world
+MD5 Hash: 3e25960a79dbc69b674cd4ec67a72c62
+	

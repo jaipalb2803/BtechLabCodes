@@ -1,0 +1,142 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.00 sec)
+
+mysql> use company;
+Database changed
+mysql> show tables;
++-------------------+
+| Tables_in_company |
++-------------------+
+| catalog           |
+| customer          |
+| orders            |
+| product           |
++-------------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from customer;
++------+--------+------------+
+| cid  | cname  | caddr      |
++------+--------+------------+
+| 5001 | Raju   | Hyderabad  |
+| 5002 | Gopi   | Delhi      |
+| 5003 | Sravan | Kolkatta   |
+| 5004 | Diwar  | Kadapa     |
+| 5005 | David  | SangaReddy |
++------+--------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from catalog;
++------+------+----------+-------+
+| pid  | oid  | Quantity | cost  |
++------+------+----------+-------+
+| 6061 | 5001 |        1 | 60000 |
+| 6062 | 5002 |        1 | 75000 |
+| 6063 | 5003 |        3 |  2100 |
+| 6064 | 5004 |        2 |  5400 |
+| 6065 | 5005 |        1 | 35000 |
++------+------+----------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from orders;
++------+------------+
+| oid  | odate      |
++------+------------+
+| 5001 | 2023-06-21 |
+| 5002 | 2023-06-22 |
+| 5003 | 2023-06-23 |
+| 5004 | 2023-06-24 |
+| 5005 | 2023-06-25 |
++------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from product;
++------+----------+-------+--------+
+| pid  | pname    | price | color  |
++------+----------+-------+--------+
+| 6061 | Iphone   | 60000 | Red    |
+| 6062 | HPlaptop | 75000 | Blue   |
+| 6063 | Realme   |   700 | Green  |
+| 6064 | Poco     |  2700 | Silver |
+| 6065 | Redmi    | 35000 | Black  |
++------+----------+-------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select cname from customer 
+    -> where cid in(select oid from catalog 
+    -> where pid in(select pid from product where color='Red'));
++-------+
+| cname |
++-------+
+| Raju  |
++-------+
+1 row in set (0.01 sec)
+
+mysql> select * from orders 
+    -> where oid in(select cid from customer
+    -> where cname='Sravan');
++------+------------+
+| oid  | odate      |
++------+------------+
+| 5003 | 2023-06-23 |
++------+------------+
+1 row in set (0.00 sec)
+
+mysql> select * from orders
+    -> where oid in(select oid from catalog 
+    -> where Quantity>1);
++------+------------+
+| oid  | odate      |
++------+------------+
+| 5003 | 2023-06-23 |
+| 5004 | 2023-06-24 |
++------+------------+
+2 rows in set (0.01 sec)
+
+mysql> select * from product
+    -> where pid in(select pid from catalog
+    -> where oid in(select oid from orders
+    -> where odate='2023-06-25'));
++------+-------+-------+-------+
+| pid  | pname | price | color |
++------+-------+-------+-------+
+| 6065 | Redmi | 35000 | Black |
++------+-------+-------+-------+
+1 row in set (0.01 sec)
+
+mysql> select * from customer
+    -> where cid in(select oid from catalog
+    -> where pid in(select pid from product
+    -> where color='Blue'));
++------+-------+-------+
+| cid  | cname | caddr |
++------+-------+-------+
+| 5002 | Gopi  | Delhi |
++------+-------+-------+
+1 row in set (0.00 sec)
+
+mysql> select * from customer
+    -> where cid in(select oid from catalog 
+    -> where pid in(select pid from product 
+    -> where price>200));
++------+--------+------------+
+| cid  | cname  | caddr      |
++------+--------+------------+
+| 5001 | Raju   | Hyderabad  |
+| 5002 | Gopi   | Delhi      |
+| 5003 | Sravan | Kolkatta   |
+| 5004 | Diwar  | Kadapa     |
+| 5005 | David  | SangaReddy |
++------+--------+------------+
+5 rows in set (0.01 sec)
+
+mysql> tee exit;

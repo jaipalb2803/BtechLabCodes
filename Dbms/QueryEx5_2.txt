@@ -1,0 +1,148 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| department         |
+| information_schema |
+| mysql              |
+| performance_schema |
+| supplier           |
+| sys                |
++--------------------+
+7 rows in set (0.01 sec)
+
+mysql> use supplier;
+Database changed
+mysql> show tables;
++--------------------+
+| Tables_in_supplier |
++--------------------+
+| catalog            |
+| parts              |
+| supplier           |
++--------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from catalog;
++-----+-----+-----------+
+| sid | pid | cost      |
++-----+-----+-----------+
+| 101 | 501 | 20000.000 |
+| 101 | 502 |  3000.000 |
+| 101 | 503 |  5000.000 |
+| 101 | 504 |   500.000 |
+| 101 | 505 |  2000.000 |
+| 102 | 502 |  4000.000 |
+| 102 | 504 |   700.000 |
+| 103 | 502 |  2500.000 |
+| 104 | 503 |  2500.000 |
+| 104 | 504 |   600.000 |
+| 105 | 505 |  2600.000 |
++-----+-----+-----------+
+11 rows in set (0.00 sec)
+
+mysql> select * from parts;
++-----+-----------+--------+
+| pid | pname     | color  |
++-----+-----------+--------+
+| 501 | Engine    | silver |
+| 502 | Battery   | red    |
+| 503 | Rim       | green  |
+| 504 | HandBrake | green  |
+| 505 | Tyre      | red    |
++-----+-----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from supplier;
++-----+-------+------------+
+| sid | sname | addr       |
++-----+-------+------------+
+| 101 | Shoba | Hyderabad  |
+| 102 | Vikas | Warangal   |
+| 103 | Yesh  | Sangareddy |
+| 104 | Indra | Kurnool    |
+| 105 | Madhu | Jagtail    |
++-----+-------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select pname from parts
+    -> where pid in (select pid from catalog
+    -> where sid in(select sid from supplier
+    -> where sname='Yesh'));
++---------+
+| pname   |
++---------+
+| Battery |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select sname from supplier
+    -> where sid in(select sid from catalog
+    -> group by sid having count(sid)=(select count(pid) from parts));
++-------+
+| sname |
++-------+
+| Shoba |
++-------+
+1 row in set (0.01 sec)
+
+mysql> select sname from supplier
+    -> where sid in(select sid from catalog
+    -> where pid in(select pid from parts where color='red')
+    -> group by sid having count(sid)=(select count(pid) from parts where color='red'));
++-------+
+| sname |
++-------+
+| Shoba |
++-------+
+1 row in set (0.00 sec)
+
+mysql> select sname from supplier 
+    -> where sid in(select sid from catalog
+    -> where cost in(select max(cost) from catalog group by pid));
++-------+
+| sname |
++-------+
+| Shoba |
+| Vikas |
+| Madhu |
++-------+
+3 rows in set (0.00 sec)
+
+mysql> select sid from supplier 
+    -> where sid in(select sid from catalog
+    -> where pid in(select pid from parts
+    -> where color='red'));
++-----+
+| sid |
++-----+
+| 101 |
+| 102 |
+| 103 |
+| 105 |
++-----+
+4 rows in set (0.00 sec)
+
+mysql> select sid from supplier
+    -> where sid in(select sid from catalog
+    -> where pid in(select pid from parts
+    -> where color='red' and color='green'));
+Empty set (0.00 sec)
+
+mysql> select sid from supplier
+    -> where sid in(select sid from catalog
+    -> where pid in(select pid from parts
+    -> where color='red' or color='green'));
++-----+
+| sid |
++-----+
+| 101 |
+| 102 |
+| 103 |
+| 104 |
+| 105 |
++-----+
+5 rows in set (0.00 sec)
+
+mysql> tee exit;

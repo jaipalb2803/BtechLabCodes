@@ -1,0 +1,286 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| supplier           |
+| sys                |
++--------------------+
+6 rows in set (0.03 sec)
+
+mysql> create database department;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| department         |
+| information_schema |
+| mysql              |
+| performance_schema |
+| supplier           |
+| sys                |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use department;
+Database changed
+mysql> create table dept(did int(10),dname varchar(50),budget float);
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> alter table dept add primary key(did);
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> create table employee(eid int(10),ename varchar(50),sal float,did int(10), primary key(eid),foreign key(did) references dept(did));
+Query OK, 0 rows affected, 2 warnings (0.02 sec)
+
+mysql> insert  into dept values
+    -> (501,'Service',300000),
+    -> (502,'Cash',400000),
+    -> (503,'Accounts',500000);
+Query OK, 3 rows affected (0.02 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> insert  into employee values
+    -> (01,'Ravi',25000,501),
+    -> (02,'Somu',38000,502),
+    -> (03,'Karthi',40000,503),
+    -> (04,'Srija',20000,501),
+    -> (05,'Naveen',60000,502);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select 8 from dept;
++---+
+| 8 |
++---+
+| 8 |
+| 8 |
+| 8 |
++---+
+3 rows in set (0.00 sec)
+
+mysql> select * from dept;
++-----+----------+--------+
+| did | dname    | budget |
++-----+----------+--------+
+| 501 | Service  | 300000 |
+| 502 | Cash     | 400000 |
+| 503 | Accounts | 500000 |
++-----+----------+--------+
+3 rows in set (0.00 sec)
+
+mysql> select * from employee;
++-----+--------+-------+------+
+| eid | ename  | sal   | did  |
++-----+--------+-------+------+
+|   1 | Ravi   | 25000 |  501 |
+|   2 | Somu   | 38000 |  502 |
+|   3 | Karthi | 40000 |  503 |
+|   4 | Srija  | 20000 |  501 |
+|   5 | Naveen | 60000 |  502 |
++-----+--------+-------+------+
+5 rows in set (0.00 sec)
+
+mysql> select e.ename,d.dname
+    -> from employee e,dept d
+    -> where e.did=d.did;
++--------+----------+
+| ename  | dname    |
++--------+----------+
+| Ravi   | Service  |
+| Srija  | Service  |
+| Somu   | Cash     |
+| Naveen | Cash     |
+| Karthi | Accounts |
++--------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee natural join dept;
++------+-----+--------+-------+----------+--------+
+| did  | eid | ename  | sal   | dname    | budget |
++------+-----+--------+-------+----------+--------+
+|  501 |   1 | Ravi   | 25000 | Service  | 300000 |
+|  501 |   4 | Srija  | 20000 | Service  | 300000 |
+|  502 |   2 | Somu   | 38000 | Cash     | 400000 |
+|  502 |   5 | Naveen | 60000 | Cash     | 400000 |
+|  503 |   3 | Karthi | 40000 | Accounts | 500000 |
++------+-----+--------+-------+----------+--------+
+5 rows in set (0.01 sec)
+
+mysql> select * from dept natural join employee;
++-----+----------+--------+-----+--------+-------+
+| did | dname    | budget | eid | ename  | sal   |
++-----+----------+--------+-----+--------+-------+
+| 501 | Service  | 300000 |   1 | Ravi   | 25000 |
+| 501 | Service  | 300000 |   4 | Srija  | 20000 |
+| 502 | Cash     | 400000 |   2 | Somu   | 38000 |
+| 502 | Cash     | 400000 |   5 | Naveen | 60000 |
+| 503 | Accounts | 500000 |   3 | Karthi | 40000 |
++-----+----------+--------+-----+--------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from dept inner join employee;
++-----+----------+--------+-----+--------+-------+------+
+| did | dname    | budget | eid | ename  | sal   | did  |
++-----+----------+--------+-----+--------+-------+------+
+| 503 | Accounts | 500000 |   1 | Ravi   | 25000 |  501 |
+| 502 | Cash     | 400000 |   1 | Ravi   | 25000 |  501 |
+| 501 | Service  | 300000 |   1 | Ravi   | 25000 |  501 |
+| 503 | Accounts | 500000 |   2 | Somu   | 38000 |  502 |
+| 502 | Cash     | 400000 |   2 | Somu   | 38000 |  502 |
+| 501 | Service  | 300000 |   2 | Somu   | 38000 |  502 |
+| 503 | Accounts | 500000 |   3 | Karthi | 40000 |  503 |
+| 502 | Cash     | 400000 |   3 | Karthi | 40000 |  503 |
+| 501 | Service  | 300000 |   3 | Karthi | 40000 |  503 |
+| 503 | Accounts | 500000 |   4 | Srija  | 20000 |  501 |
+| 502 | Cash     | 400000 |   4 | Srija  | 20000 |  501 |
+| 501 | Service  | 300000 |   4 | Srija  | 20000 |  501 |
+| 503 | Accounts | 500000 |   5 | Naveen | 60000 |  502 |
+| 502 | Cash     | 400000 |   5 | Naveen | 60000 |  502 |
+| 501 | Service  | 300000 |   5 | Naveen | 60000 |  502 |
++-----+----------+--------+-----+--------+-------+------+
+15 rows in set (0.00 sec)
+
+mysql> select * from dept inner join employee on employee.eid=dept.did;
+Empty set (0.00 sec)
+
+mysql> select * from dept inner join employee on employee.did=dept.did;
++-----+----------+--------+-----+--------+-------+------+
+| did | dname    | budget | eid | ename  | sal   | did  |
++-----+----------+--------+-----+--------+-------+------+
+| 501 | Service  | 300000 |   1 | Ravi   | 25000 |  501 |
+| 501 | Service  | 300000 |   4 | Srija  | 20000 |  501 |
+| 502 | Cash     | 400000 |   2 | Somu   | 38000 |  502 |
+| 502 | Cash     | 400000 |   5 | Naveen | 60000 |  502 |
+| 503 | Accounts | 500000 |   3 | Karthi | 40000 |  503 |
++-----+----------+--------+-----+--------+-------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from dept left outer join employee on employee.did=dept.did;
++-----+----------+--------+------+--------+-------+------+
+| did | dname    | budget | eid  | ename  | sal   | did  |
++-----+----------+--------+------+--------+-------+------+
+| 501 | Service  | 300000 |    1 | Ravi   | 25000 |  501 |
+| 501 | Service  | 300000 |    4 | Srija  | 20000 |  501 |
+| 502 | Cash     | 400000 |    2 | Somu   | 38000 |  502 |
+| 502 | Cash     | 400000 |    5 | Naveen | 60000 |  502 |
+| 503 | Accounts | 500000 |    3 | Karthi | 40000 |  503 |
++-----+----------+--------+------+--------+-------+------+
+5 rows in set (0.01 sec)
+
+mysql> select * from dept right outer join employee on employee.did=dept.did;
++------+----------+--------+-----+--------+-------+------+
+| did  | dname    | budget | eid | ename  | sal   | did  |
++------+----------+--------+-----+--------+-------+------+
+|  501 | Service  | 300000 |   1 | Ravi   | 25000 |  501 |
+|  502 | Cash     | 400000 |   2 | Somu   | 38000 |  502 |
+|  503 | Accounts | 500000 |   3 | Karthi | 40000 |  503 |
+|  501 | Service  | 300000 |   4 | Srija  | 20000 |  501 |
+|  502 | Cash     | 400000 |   5 | Naveen | 60000 |  502 |
++------+----------+--------+-----+--------+-------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from employee cross join dept;
++-----+--------+-------+------+-----+----------+--------+
+| eid | ename  | sal   | did  | did | dname    | budget |
++-----+--------+-------+------+-----+----------+--------+
+|   1 | Ravi   | 25000 |  501 | 503 | Accounts | 500000 |
+|   1 | Ravi   | 25000 |  501 | 502 | Cash     | 400000 |
+|   1 | Ravi   | 25000 |  501 | 501 | Service  | 300000 |
+|   2 | Somu   | 38000 |  502 | 503 | Accounts | 500000 |
+|   2 | Somu   | 38000 |  502 | 502 | Cash     | 400000 |
+|   2 | Somu   | 38000 |  502 | 501 | Service  | 300000 |
+|   3 | Karthi | 40000 |  503 | 503 | Accounts | 500000 |
+|   3 | Karthi | 40000 |  503 | 502 | Cash     | 400000 |
+|   3 | Karthi | 40000 |  503 | 501 | Service  | 300000 |
+|   4 | Srija  | 20000 |  501 | 503 | Accounts | 500000 |
+|   4 | Srija  | 20000 |  501 | 502 | Cash     | 400000 |
+|   4 | Srija  | 20000 |  501 | 501 | Service  | 300000 |
+|   5 | Naveen | 60000 |  502 | 503 | Accounts | 500000 |
+|   5 | Naveen | 60000 |  502 | 502 | Cash     | 400000 |
+|   5 | Naveen | 60000 |  502 | 501 | Service  | 300000 |
++-----+--------+-------+------+-----+----------+--------+
+15 rows in set (0.00 sec)
+
+mysql> show tables;
++----------------------+
+| Tables_in_department |
++----------------------+
+| dept                 |
+| employee             |
++----------------------+
+2 rows in set (0.02 sec)
+
+mysql> desc dept;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| did    | int         | NO   | PRI | NULL    |       |
+| dname  | varchar(50) | YES  |     | NULL    |       |
+| budget | float       | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> desc employee;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| eid   | int         | NO   | PRI | NULL    |       |
+| ename | varchar(50) | YES  |     | NULL    |       |
+| sal   | float       | YES  |     | NULL    |       |
+| did   | int         | YES  | MUL | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from dept;
++-----+----------+--------+
+| did | dname    | budget |
++-----+----------+--------+
+| 501 | Service  | 300000 |
+| 502 | Cash     | 400000 |
+| 503 | Accounts | 500000 |
++-----+----------+--------+
+3 rows in set (0.03 sec)
+
+mysql> select * from employee;
++-----+--------+-------+------+
+| eid | ename  | sal   | did  |
++-----+--------+-------+------+
+|   1 | Ravi   | 25000 |  501 |
+|   2 | Somu   | 38000 |  502 |
+|   3 | Karthi | 40000 |  503 |
+|   4 | Srija  | 20000 |  501 |
+|   5 | Naveen | 60000 |  502 |
++-----+--------+-------+------+
+5 rows in set (0.01 sec)
+
+mysql> select e.ename,d.dname from employee e,dept d
+    -> where e.did=d.did and e.sal>20000;
++--------+----------+
+| ename  | dname    |
++--------+----------+
+| Ravi   | Service  |
+| Somu   | Cash     |
+| Karthi | Accounts |
+| Naveen | Cash     |
++--------+----------+
+4 rows in set (0.01 sec)
+
+mysql> select e.ename,d.dname from employee e,dept d
+    -> where e.did=d.did and d.budget>300000;
++--------+----------+
+| ename  | dname    |
++--------+----------+
+| Somu   | Cash     |
+| Naveen | Cash     |
+| Karthi | Accounts |
++--------+----------+
+3 rows in set (0.01 sec)
+

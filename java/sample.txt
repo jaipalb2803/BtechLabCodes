@@ -1,0 +1,5 @@
+REFERENCE BOOKS
+1. Java for Programmers, P. J. Deitel and H. M. Deitel, 10th Edition Pearson education.
+2. Thinking in Java, Bruce Eckel, Pearson Education.
+3. Java Programming, D. S. Malik and P. S. Nair, Cengage Learning.
+4. Core Java, Volume 1, 9th edition, Cay S. Horstmann and G Cornell, Pearson
