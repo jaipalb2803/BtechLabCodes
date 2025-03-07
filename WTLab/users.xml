@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<users>
+  <user id="1">
+    <name>John Smith</name>
+    <email>john.smith@example.com</email>
+    <password>123456</password>
+    <credit_card>1111-2222-3333-4444</credit_card>
+  </user>
+  <user id="2">
+    <name>Jane Doe</name>
+    <email>jane.doe@example.com</email>
+    <password>654321</password>
+    <credit_card>5555-6666-7777-8888</credit_card>
+  </user>
+  <!-- Add more user elements here -->
+</users>

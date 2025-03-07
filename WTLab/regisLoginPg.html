@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Register/Login page</title>
+    <script src = "regLoginValidate.js"> </script> 
+  </head>
+  <body><center>
+    <h1>Registeration/Login</h1> 
+    <form method="post" onsubmit="validateform()">
+    <fieldset style="height:400px;width:300px;">
+       <legend>Register/Login Information</legend><br><br><br><br><br><br>
+       <table>
+	      <tr>
+		      <td>Username:</td>
+		      <td ><input type="text" id="usrname" name="usrname" placeholder="Enter an username"></td>
+        </tr>
+        <tr>
+		      <td>Password:</td>
+		      <td><input type="password"id="pwd"name="pwd"></td>
+	      </tr>
+        <tr>
+		      <td>Confirm Password:</td>
+		      <td><input type="password"id="confpwd"name="confpwrd"></td>
+	      </tr>
+	 </table><br><br><br><br><br><br>
+   <input type="submit" name="register" id="register"value="Register">
+	 <input type="submit" name="login" id="login"value="Login">
+  </fieldset>	
+  </form>
+  </center></body>
+</html>

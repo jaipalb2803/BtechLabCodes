@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Profile page</title> 
+    <script src = "profileValidate.js"></script> 
+  </head>
+  <body><center>
+    <h1>Profile</h1> 
+    <form method="post" onsubmit="validateform()">
+    <fieldset style="height:400px;width:300px;">
+      <legend>Profile Information</legend><br><br><br><br><br><br>
+      <table>
+	       <tr>
+		        <td>Username:</td>
+		        <td><input type="text" id="usrname" name="usrname" placeholder="Enter username"></td>
+         </tr>
+          <tr>
+            <td>Password:</td>
+            <td><input type="password" id="pwd" name="pwd" placeholder="Enter password"></td>
+          </tr>
+          <tr>
+		        <td>Email:</td>
+		        <td><input type="email" id="email" name="email" placeholder="Enter email"></td>
+	        </tr>
+          <tr>
+		        <td>Mobile Number:</td>
+		        <td><input type="number" id="phnnumber" name="phnnumber" placeholder="Enter phone number"></td>
+	        </tr>
+	    </table><br><br><br><br><br><br>
+      <input type="reset" id="reset" name="reset" value="Reset">
+	    <input type="submit" id="submit" name="submit"value="Submit">
+    </fieldset>
+  </form>	
+  </center></body>
+</html>

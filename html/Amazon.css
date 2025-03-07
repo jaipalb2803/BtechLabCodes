@@ -1,0 +1,94 @@
+body {
+    font-family: Arial;
+    text-align: left;
+    margin:0;
+    padding:0;    
+}
+header {
+    background-color: #080808;
+    color: #FFF;
+    width:100%;
+    height:20%;
+}
+.navbar {
+    background-color: #263345;
+    padding:0.5px;
+    border-radius: 0.5px;
+    width:100%;
+   
+}
+.navbar ul{
+    overflow:auto;
+}
+.navbar li{
+    float:left;
+    list-style:none;
+    margin:3px 7px;
+
+}
+.navbar li a{
+    padding:3px 5px;
+    text-decoration:none;
+    color:#FFF;
+}   
+.navbar li:hover{
+    background-color: #445266;
+    border-radius:15px;
+}   
+.search{
+    position: absolute;
+    color:black;
+    top:5%;
+    left:60%;
+    padding: 12px 80px;
+    border-radius:15px ;
+    border-color: black;
+}
+.srch-btn{
+    position: absolute;
+    top:20%;
+    left:65%;
+    border-radius:15px ;
+    border-color: black;
+    
+}
+.homeSec {
+    padding: 20px;
+    font-family: cursive;
+    text-align: left;
+    
+}
+.homePro{
+    display:flex;     
+}
+.homePro img{
+    border:3px ;
+    border-radius: 12px;
+    width: 250px;
+    height: 200px;
+    display:relative;
+}
+.homePro button{
+    border:2px solid white;
+    border-radius: 12px;
+    width: 200px;
+    height: 50px;
+    font-family: cursive;
+    display:relative;
+    background-color: yellow;
+}
+.homePro button:hover{
+    background-color: #f4fca2;
+    border-radius:15px;
+}   
+footer {
+    background-color:rgb(209, 209, 99);
+    color: #FFF;
+    text-align: center;
+    padding: 10px;
+    position: relative;
+    border-radius: 3px;
+    bottom:0;
+    width: 100%;
+    height:5%;
+}

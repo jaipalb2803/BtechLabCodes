@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<html>
+   <header> Registertion Form </header>
+   <body>
+		<h3> User Registertion Form</h3>
+		<fieldset> 
+			<legend>Register Details</legend>
+			First Name		:<input type="text" name="fname"><br/>
+			Last Name 		:<input type="text" name="lname"><br/>
+			Date of Birth 	:<input type="date" name="dob"><br/>
+			<label for="gender"><b>Gender</b></label>
+		    <input type="radio" name="gender" value="male">Male
+			<input type="radio" name="gender" value="female">Female
+			<input type="radio" name="gender" value="other">Other<br>
+			<label for="gender"><b>Residentail Status</b></label>
+		    <input type="radio" name="res" value="Indian">Indian
+			<input type="radio" name="res" value="NRI">NRI<br>
+		</fieldset>
+		<fieldset>
+			<legend>Log-in Details</legend>
+			Email	 		:<input type="email" name="email"><br/>
+			Contact Number	:<input type="number/tel" name="phone"><br/>
+			<label for="city"> City : </label>
+			<datalist id="city">
+			 <select name="city">
+				<option value="Channai">Channai</option>
+				<option value="Delhi">Delhi</option>
+				<option value="Kolkata">Kolkata</option>
+				<option value="Hyderabad">Hyderabad</option>
+			 </select></datalist>
+			 <input type="text" name="city" list="city"><br>
+			Password  		:<input type="password"name="passd"><br>
+			Re-Type Password:<input type="password"name="rpassd"><br>
+		</fieldset>
+		<button onclick="alert('Registration Complete')">Submit</button><br>
+			
+		</form>
+   </body>	
+	
+</html>

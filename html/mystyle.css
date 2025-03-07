@@ -1,0 +1,13 @@
+body{
+    background-color: rgb(92, 184, 153);
+    text-align: left;
+}
+p{
+    text-align: left;
+}
+table,th,tr,td{
+     border: 1.5px solid rgb(23, 23, 66);
+     width:300px;
+     border-spacing:0px;
+     padding:0px;
+}

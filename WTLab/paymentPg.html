@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Payment page</title>
+    <script src = "paymentValidate.js"></script>  
+  </head>
+  <body>
+  <center>
+    <h1>Payments</h1> 
+    <form method="post" onsubmit="validateform()">
+      <fieldset style="height:400px;width:300px;">
+      <legend>Payment Information</legend><br><br><br><br><br><br>
+        <table>
+	        <tr>
+		        <td>Credit Card Number:</td>
+		        <td><input type="number" id="crdNo" name="crdNo" placeholder="Enter your card number" required></td>
+          </tr>
+          <tr>
+		        <td>Expiration Date:</td>
+		        <td><input type="text" id="expDate" name="expDate" placeholder="MM/YY" required></td>
+          </tr>
+          <tr>
+		        <td>CVV:</td>
+		        <td><input type="text" id="cvv" name="cvv" placeholder="Enter CVV" required</td>
+	        </tr>
+          <tr>
+		        <td>Cardholder Name:</td>
+		        <td><input type="text" id="cardHolderName" name="cardHolderName" placeholder="Enter cardholder name" required></td>
+	        </tr>
+	     </table><br><br><br><br><br><br>
+	     <input type="submit" id="payment" name="payment"value="Make Payment">
+    </fieldset>	
+    </form>
+  </center></body>
+</html>

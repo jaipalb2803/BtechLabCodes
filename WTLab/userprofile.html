@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <title>User Profile</title>
+  </head>
+  <body><center>
+    <h1>User Profile</h1>
+    <fieldset style="height:400px;width:300px;">
+    <legend>Profile Information</legend><br><br><br>
+    <form id="profileForm" onsubmit="validateForm();">
+      <table>
+        <tr>
+           <td><label for="name">Name:</label></td>
+           <td><input type="text" id="name" name="name" placeholder="Enter name"required></td>
+        </tr>
+         <tr>
+           <td><label for="email">Email:</label></td>
+           <td><input type="email" id="email" name="email" placeholder="Enter email"required></td>
+         </tr>
+         <tr>
+           <td><label for="password">New Password:</label></td>
+           <td><input type="password" id="password" name="password" placeholder="Enter password"></td>
+         </tr>
+        </table><br><br><br><br><br><br> 
+      <button type="submit">Update Profile</button>
+    </form>
+  </fieldset>
+  <script>
+      function validateForm() {
+        var name = document.getElementById('name').value;
+        var email = document.getElementById('email').value;
+        var password = document.getElementById('password').value;
+        if (name === '') {
+          alert('Please enter your name.');
+          return;
+        }
+        if (email === '') {
+          alert('Please enter your email address.');
+          return;
+        }
+        if (password.length > 0 && password.length < 6) {
+          alert('Password must be at least 6 characters.');
+          return;
+        }
+        alert('Profile updated successfully!');
+      }
+   </script>
+  </center></body>
+</html>

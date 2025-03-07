@@ -1,0 +1,4 @@
+He write a notes,pos
+It was not close office,neg
+The election was completed,pos
+She didn't play games,neg
