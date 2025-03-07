@@ -1,0 +1,46 @@
+<html>
+<head>
+    <title>DHKE</title>
+</head>
+<body>
+    <h2>DHKE</h2>
+    <button onclick="DHKE()">Do Key Exchange</button>
+    <p id="output"></p>
+    <script>
+        function modExp(base,exp,mod)
+        {
+            let res=1;
+            base=base%mod;
+            while(exp>0)
+            {
+                if(exp%2==1)
+                    res=(res*base)%mod;
+                base=(base*base)%mod;
+                exp=Math.floor(exp/2);
+            }
+            return res;
+        }
+        function DHKE()
+        {
+            const p=23;
+            const g=5;
+            const a=6;
+            const b=15;
+            const A=modExp(g,a,p);
+            const B=modExp(g,b,p);
+            const kA=modExp(B,a,p);
+            const kB=modExp(A,b,p);
+
+            const output=`
+                alice public key=${A}<br>
+                bob public key=${B}<br>
+                alice shared key=${kA}<br>
+                bob shared key=${kB}<br>    
+            `
+            document.getElementById("output").innerHTML= output;    
+        }
+    </script>
+ </body>   
+</html>
+
+

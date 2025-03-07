@@ -1,0 +1,487 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| department         |
+| information_schema |
+| mysql              |
+| performance_schema |
+| supplier           |
+| sys                |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> create database company;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| department         |
+| information_schema |
+| mysql              |
+| performance_schema |
+| supplier           |
+| sys                |
++--------------------+
+7 rows in set (0.00 sec)
+mysql> use company;
+Database changed
+
+mysql> create table product(pid int(10),pname varchar(50),price float,color varchar(30),primary key(pid));
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> insert into product values
+    -> (6061,'Iphone',6000,'Red'),
+    -> (6062,'HPlaptop',75000,'Blue'),
+    -> (6063,'Realme',700,'Green'),
+    -> (6064,'Poco',2700,'Silver'),
+    -> (6065,'Redmi',35000,'Black');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> create table orders(oid int(10),odate date,primary key(oid));
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> insert into orders values
+    -> (5001,'2023-06-21'),
+    -> (5002,'2023-06-22'),
+    -> (5003,'2023-06-23'),
+    -> (5004,'2023-06-24'),
+    -> (5005,'2023-06-25');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+
+mysql> create table customer(cid int(10),cname varchar(50),caddr varchar(50),oid int(10),primary key(cid,oid),
+    -> foreign key(oid) references orders(oid));
+Query OK, 0 rows affected, 2 warnings (0.03 sec)
+
+mysql> insert into customer values
+    -> (1,'Raju','Hyderabad',5001),
+    -> (2,'Gopi','Delhi',5002),
+    -> (3,'Sravan','Kolkata',5003),
+    -> (4,'Diwar','Kadapa',5004),
+    -> (5,'David','Sangareddy',5005);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> create table catalog(pid int(10),oid int(10),Quantity int(10),cost float,primary key(pid,oid),
+    -> foreign key(pid) references product(pid),
+    -> foreign key(oid) references orders(oid));
+Query OK, 0 rows affected, 3 warnings (0.03 sec)
+
+mysql> insert into catalog values
+    -> (6061,5001,1,60000),
+    -> (6062,5002,1,75000),
+    -> (6063,5003,3,2100),
+    -> (6064,5004,2,5400),
+    -> (6065,5005,1,3500);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into catalog values
+    -> (6061,5001,1,60000),
+    -> (6062,5002,1,75000),
+    -> (6063,5003,3,2100),
+    -> (6064,5004,2,5400),
+    -> (6065,5005,1,3500);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from customer;
++-----+--------+------------+------+
+| cid | cname  | caddr      | oid  |
++-----+--------+------------+------+
+|   1 | Raju   | Hyderabad  | 5001 |
+|   2 | Gopi   | Delhi      | 5002 |
+|   3 | Sravan | Kolkata    | 5003 |
+|   4 | Diwar  | Kadapa     | 5004 |
+|   5 | David  | Sangareddy | 5005 |
++-----+--------+------------+------+
+5 rows in set (0.00 sec)
+
+mysql> select * from catalog;
++------+------+----------+-------+
+| pid  | oid  | Quantity | cost  |
++------+------+----------+-------+
+| 6061 | 5001 |        1 | 60000 |
+| 6062 | 5002 |        1 | 75000 |
+| 6063 | 5003 |        3 |  2100 |
+| 6064 | 5004 |        2 |  5400 |
+| 6065 | 5005 |        1 |  3500 |
++------+------+----------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from product;
++------+----------+-------+--------+
+| pid  | pname    | price | color  |
++------+----------+-------+--------+
+| 6061 | Iphone   |  6000 | Red    |
+| 6062 | HPlaptop | 75000 | Blue   |
+| 6063 | Realme   |   700 | Green  |
+| 6064 | Poco     |  2700 | Silver |
+| 6065 | Redmi    | 35000 | Black  |
++------+----------+-------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from orders;
++------+------------+
+| oid  | odate      |
++------+------------+
+| 5001 | 2023-06-21 |
+| 5002 | 2023-06-22 |
+| 5003 | 2023-06-23 |
+| 5004 | 2023-06-24 |
+| 5005 | 2023-06-25 |
++------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select c.cname,p.pname from customer c,orders o,product p,catalog ca
+    -> where c.oid=o.oid and o.oid=ca.oid and ca.pid=p.pid;
++--------+----------+
+| cname  | pname    |
++--------+----------+
+| Raju   | Iphone   |
+| Gopi   | HPlaptop |
+| Sravan | Realme   |
+| Diwar  | Poco     |
+| David  | Redmi    |
++--------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select p.pname,o.odate from orders o,product p,catalog ca
+    -> where o.oid=ca.oid and ca.pid=p.pid;
++----------+------------+
+| pname    | odate      |
++----------+------------+
+| Iphone   | 2023-06-21 |
+| HPlaptop | 2023-06-22 |
+| Realme   | 2023-06-23 |
+| Poco     | 2023-06-24 |
+| Redmi    | 2023-06-25 |
++----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select c.cname,p.pname from customer c,orders o,product p,catalog ca
+    -> where c.oid=o.oid and o.oid=ca.oid and ca.pid=p.pid and p.color='Blue';
++-------+----------+
+| cname | pname    |
++-------+----------+
+| Gopi  | HPlaptop |
++-------+----------+
+1 row in set (0.00 sec)
+
+mysql> select c.cid,c.cname,p.pid,p.pname,o.odate from customer c,orders o,product p,catalog ca
+    -> where c.oid=o.oid and o.oid=ca.oid and ca.pid=p.pid;
++-----+--------+------+----------+------------+
+| cid | cname  | pid  | pname    | odate      |
++-----+--------+------+----------+------------+
+|   1 | Raju   | 6061 | Iphone   | 2023-06-21 |
+|   2 | Gopi   | 6062 | HPlaptop | 2023-06-22 |
+|   3 | Sravan | 6063 | Realme   | 2023-06-23 |
+|   4 | Diwar  | 6064 | Poco     | 2023-06-24 |
+|   5 | David  | 6065 | Redmi    | 2023-06-25 |
++-----+--------+------+----------+------------+
+5 rows in set (0.00 sec)
+
+
+                        // TOPIC UNDER CURSOR,TRIGGERS AND PROCEDURES : //
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| department         |
+| information_schema |
+| mysql              |
+| performance_schema |
+| supplier           |
+| sys                |
++--------------------+
+7 rows in set (0.11 sec)
+
+mysql> create database school;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> use school;
+Database changed
+mysql> create table stud(sid int(10),sname varchar(50),per float check(per>=0 and per<=100),primary key(sid));
+Query OK, 0 rows affected, 1 warning (0.05 sec)
+
+mysql> show tables;
++------------------+
+| Tables_in_school |
++------------------+
+| stud             |
++------------------+
+1 row in set (0.01 sec)
+
+mysql> desc stud;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| sid   | int         | NO   | PRI | NULL    |       |
+| sname | varchar(50) | YES  |     | NULL    |       |
+| per   | float       | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> insert into stud values
+    -> (01,'Indra',98.06),
+    -> (02,'Yeshwanth',78.23),
+    -> (03,'Jaipal',96.37),
+    -> (04,'Vikas',88.49);
+Query OK, 4 rows affected (0.02 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select * from stud;
++-----+-----------+-------+
+| sid | sname     | per   |
++-----+-----------+-------+
+|   1 | Indra     | 98.06 |
+|   2 | Yeshwanth | 78.23 |
+|   3 | Jaipal    | 96.37 |
+|   4 | Vikas     | 88.49 |
++-----+-----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table trigLogs(logs varchar(256));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> delimiter $$
+mysql> create trigger std_trig
+    -> after insert on stud for each row
+    -> begin
+    ->  insert into trigLogs values('New record insert');
+    -> end $$
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> insert into stud values(05,'Madhu',58.34); $$
+
+mysql> select * from stud;
+    -> $$
++-----+-----------+-------+
+| sid | sname     | per   |
++-----+-----------+-------+
+|   1 | Indra     | 98.06 |
+|   2 | Yeshwanth | 78.23 |
+|   3 | Jaipal    | 96.37 |
+|   4 | Vikas     | 88.49 |
+|   5 | Madhu     | 58.34 |
++-----+-----------+-------+
+5 rows in set (0.00 sec)
+
+mysql> delimiter ;
+mysql> select * from stud;
++-----+-----------+-------+
+| sid | sname     | per   |
++-----+-----------+-------+
+|   1 | Indra     | 98.06 |
+|   2 | Yeshwanth | 78.23 |
+|   3 | Jaipal    | 96.37 |
+|   4 | Vikas     | 88.49 |
+|   5 | Madhu     | 58.34 |
++-----+-----------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from trigLogs;
++-------------------+
+| logs              |
++-------------------+
+| New record insert |
++-------------------+
+1 row in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> create trigger std_trig_updt
+    -> after update on stud for each row
+    -> begin
+    ->    insert into trigLogs values('New record updated');
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql>  update stud set per=76.29 where sid=5; $$
+Query OK, 0 rows affected (0.01 sec)
+Rows matched: 1  Changed: 0  Warnings: 0
+
+mysql> delimiter ;
+mysql> select * from trigLogs;
++--------------------+
+| logs               |
++--------------------+
+| New record insert  |
+| New record updated |
++--------------------+
+2 rows in set (0.00 sec)
+
+mysql> delimiter $$
+mysql> create trigger std_trig_del
+    -> after delete on stud for each row
+    -> begin
+    ->   insert into trigLogs values('A record deleted');
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> delete from stud where sid=5;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> select * from stud;
++-----+-----------+-------+
+| sid | sname     | per   |
++-----+-----------+-------+
+|   1 | Indra     | 98.06 |
+|   2 | Yeshwanth | 78.23 |
+|   3 | Jaipal    | 96.37 |
+|   4 | Vikas     | 88.49 |
++-----+-----------+-------+
+4 rows in set (0.00 sec)
+
+mysql> select * from trigLogs;
++--------------------+
+| logs               |
++--------------------+
+| New record insert  |
+| New record updated |
+| A record deleted   |
++--------------------+
+3 rows in set (0.00 sec)
+
+mysql> drop trigger std_trig;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> drop trigger std_trig_updt;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> drop trigger std_trig_del;
+Query OK, 0 rows affected (0.01 sec)
+
+		 :***: CURSOR :***:
+
+mysql> show tables;
++------------------+
+| Tables_in_school |
++------------------+
+| stud             |
+| triglogs         |
++------------------+
+2 rows in set (0.01 sec)
+
+mysql> select * from stud;
++-----+-----------+-------+
+| sid | sname     | per   |
++-----+-----------+-------+
+|   1 | Indra     | 98.06 |
+|   2 | Yeshwanth | 78.23 |
+|   3 | Jaipal    | 96.37 |
+|   4 | Vikas     | 88.49 |
++-----+-----------+-------+
+4 rows in set (0.01 sec)
+
+mysql> delimiter $$
+mysql> create procedure merit_std()
+    -> begin
+    -> declare scr float;
+    -> declare nm varchar(50);
+    -> declare bool int default 0;
+    -> declare c1 cursor for select sname,per from stud where per>=70;
+    -> declare continue handler for not found set bool=1;
+    -> open c1;
+    ->  get_stud:loop
+    ->    fetch c1 into nm,scr;
+    ->    if bool=1 then
+    ->      leave get_stud;
+    ->    end if;
+    ->      select nm,scr;
+    ->   end loop get_stud;
+    ->  close c1;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call merit_std(); $$
++-------+-------+
+| nm    | scr   |
++-------+-------+
+| Indra | 98.06 |
++-------+-------+
+1 row in set (0.00 sec)
+
++-----------+-------+
+| nm        | scr   |
++-----------+-------+
+| Yeshwanth | 78.23 |
++-----------+-------+
+1 row in set (0.00 sec)
+
++--------+-------+
+| nm     | scr   |
++--------+-------+
+| Jaipal | 96.37 |
++--------+-------+
+1 row in set (0.01 sec)
+
++-------+-------+
+| nm    | scr   |
++-------+-------+
+| Vikas | 88.49 |
++-------+-------+
+1 row in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> drop procedure merit_std;
+Query OK, 0 rows affected (0.01 sec)
+			
+		              // PROCEDURE //
+
+mysql> delimiter $$
+mysql> create procedure  stdDtl()
+    -> begin
+    ->   select * from stud where per>=90;
+    -> end $$
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> call stdDtl;
+    -> $$
++-----+--------+-------+
+| sid | sname  | per   |
++-----+--------+-------+
+|   1 | Indra  | 98.06 |
+|   3 | Jaipal | 96.37 |
++-----+--------+-------+
+2 rows in set (0.01 sec)
+
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> delimiter ;
+mysql> drop procedure stdDtl;
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> select sysdate() from dual;
++---------------------+
+| sysdate()           |
++---------------------+
+| 2023-09-06 08:52:43 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> select curdate() from dual;
++------------+
+| curdate()  |
++------------+
+| 2023-09-06 |
++------------+
+1 row in set (0.00 sec)
+
+mysql> select now() from dual;
++---------------------+
+| now()               |
++---------------------+
+| 2023-09-06 08:53:19 |
++---------------------+
+1 row in set (0.00 sec)

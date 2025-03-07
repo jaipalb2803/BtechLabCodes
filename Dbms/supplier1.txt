@@ -1,0 +1,142 @@
+\\mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (0.12 sec)
+
+mysql> create database supplier;
+Query OK, 1 row affected (0.02 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| company            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| supplier           |
+| sys                |
++--------------------+
+6 rows in set (0.01 sec)
+
+mysql> use supplier;
+Database changed
+mysql> create table supplier(sid int(10),sname varchar(50),addr varchar(50),primary key(sid));
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> create table parts(pid int(10),pname varchar(50),color varchar(50),primary key(pid));
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> create table catalog (sid int(10),pid int(10),cost double(20,3),
+    -> primary key(sid,pid),foreign key(sid) references supplier(sid),
+    -> foreign key(pid) references parts(pid));
+Query OK, 0 rows affected, 3 warnings (0.02 sec)
+
+mysql> insert into supplier values
+    -> (101,'Shoba','Hyderabad'),
+    -> (102,'Vikas','Warangal'),
+    -> (103,'Yesh','Sangareddy'),
+    -> (104,'Indra','Kurnool'),
+    -> (105,'Madhu','Jagtail');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into parts values
+    -> (501,'Engine','silver'),
+    -> (502,'Battery','red'),
+    -> (503,'Rim','green'),
+    -> (504,'HandBrake','green'),
+    -> (505,'Tyre','red');
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> insert into catalog values
+    -> (101,501,20000),
+    -> (101,502,3000),
+    -> (101,503,5000),
+    -> (101,504,500),
+    -> (101,505,2000),
+    -> (102,502,4000),
+    -> (102,504,700),
+    -> (103,502,2500),
+    -> (104,504,600),
+    -> (104,503,2500),
+    -> (105,505,2600);
+Query OK, 11 rows affected (0.01 sec)
+Records: 11  Duplicates: 0  Warnings: 0
+
+mysql> select * from supplier;
++-----+-------+------------+
+| sid | sname | addr       |
++-----+-------+------------+
+| 101 | Shoba | Hyderabad  |
+| 102 | Vikas | Warangal   |
+| 103 | Yesh  | Sangareddy |
+| 104 | Indra | Kurnool    |
+| 105 | Madhu | Jagtail    |
++-----+-------+------------+
+5 rows in set (0.01 sec)
+
+mysql> select * from parts;
++-----+-----------+--------+
+| pid | pname     | color  |
++-----+-----------+--------+
+| 501 | Engine    | silver |
+| 502 | Battery   | red    |
+| 503 | Rim       | green  |
+| 504 | HandBrake | green  |
+| 505 | Tyre      | red    |
++-----+-----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from catalog;
++-----+-----+-----------+
+| sid | pid | cost      |
++-----+-----+-----------+
+| 101 | 501 | 20000.000 |
+| 101 | 502 |  3000.000 |
+| 101 | 503 |  5000.000 |
+| 101 | 504 |   500.000 |
+| 101 | 505 |  2000.000 |
+| 102 | 502 |  4000.000 |
+| 102 | 504 |   700.000 |
+| 103 | 502 |  2500.000 |
+| 104 | 503 |  2500.000 |
+| 104 | 504 |   600.000 |
+| 105 | 505 |  2600.000 |
++-----+-----+-----------+
+11 rows in set (0.00 sec)
+
+mysql> select sid,count(pid) from catalog group by sid;
++-----+------------+
+| sid | count(pid) |
++-----+------------+
+| 101 |          5 |
+| 102 |          2 |
+| 103 |          1 |
+| 104 |          2 |
+| 105 |          1 |
++-----+------------+
+5 rows in set (0.00 sec)
+
+mysql> select pid,count(sid) from catalog group by pid;
++-----+------------+
+| pid | count(sid) |
++-----+------------+
+| 501 |          1 |
+| 502 |          3 |
+| 503 |          2 |
+| 504 |          3 |
+| 505 |          2 |
++-----+------------+
+5 rows in set (0.00 sec)
+
+
+mysql> tee exit

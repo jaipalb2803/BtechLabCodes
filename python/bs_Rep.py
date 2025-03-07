@@ -1,0 +1,10 @@
+# python programe
+print("Enter any numbers:")
+a=int(input()) 
+b=bin(a)
+c=oct(a)
+d=hex(a)
+print("Binary reprasentation:",b)
+print("octal reprasentation:",c)
+print("decimal reprasentation:",a)
+print("hexadecimal reprasentation:",d)

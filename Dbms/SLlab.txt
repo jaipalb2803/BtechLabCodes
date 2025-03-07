@@ -1,0 +1,862 @@
+-----------------------------------------------------------------------------------------------------------------------------------------
+/*List of Experiments*//
+-----------------------------------------------------------------------------------------------------------------------------------------
+1.Write a Ruby script to create a new string which is n copies of a given string where n is a non-negative integer
+
+def multiply_string(str, n)
+  return (str+" ") * n
+end
+
+print"Enter the string="
+str= gets.chomp.to_s   
+
+print"Enter the no of copies="
+num= gets.chomp.to_i
+newStr = multiply_string(str, num)
+
+puts newStr
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter the string=jntuhces
+Enter the no of copies=5
+jntuhces jntuhces jntuhces jntuhces jntuhces
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+2.Write a Ruby script which accept the radius of a circle from the user and compute the parameter and area?
+
+def calPerimeter(r)
+  return 2*Math::PI*r
+end
+def calArea(r)
+  return Math::PI*r*r
+end
+
+print "Enter the radius of circle="
+r= gets.chomp.to_i   
+p= calPerimeter(r)
+a= calArea(r)
+print "Circle Perimetre=",p.round(2)," and Area=",a.round(2)
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter the radius of circle=2
+Circle Perimetre=12.57 and Area=12.57
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+3. Write a Ruby script which accept the user's first and last name and print them in reverse order 
+with a space between them
+
+def reverseOrder(fname,lname) 
+  fullName="#{fname} #{lname}"
+  revName=fullName.split.reverse.join(' ')
+  return revName
+end
+def reverseStr(fname,lname) 
+  fullName="#{fname} #{lname}"
+  revName=fullName.reverse
+  return revName
+end
+
+print "Enter the first name="
+fname= gets.chomp.to_s  
+print "Enter the last name="
+lname= gets.chomp.to_s 
+revStr=reverseOrder(fname,lname)
+puts revStr
+
+revStr=reverseStr(fname,lname)
+puts revStr
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter the first name=Badavath 
+Enter the last name=Jaipal
+Jaipal Badavath
+lapiaJ htavadaB
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+4. Write a Ruby script to accept a filename from the user print the extension of that file
+
+print "Please Enter the filename="
+filename=gets.chomp
+
+extn=File.extname(filename)
+puts "The Extension of the file is: #{extn}"
+
+base=File.basename("D:\scriptPrgm\ruby")
+puts "The Base of the file is: #{base}"
+
+dir=File.dirname("D:\scriptPrgm\ruby")
+puts "The DirName of the file is: #{dir}"
+
+res=File.directory?("Dogs")
+puts "The Directory of the file is: #{res}"
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Please Enter the filename=ruby.rb
+The Extension of the file is: .rb
+The Base of the file is: scriptPrgm
+The DirName of the file is: D:.
+The Directory of the file is: false
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+5. Write a Ruby script to find the greatest of three numbers
+
+def greatestNum(n1,n2,n3)
+    if(n1>=n2 && n1>=n3)        
+        return n1
+    elsif(n2>=n1 && n2>=n3)     
+        return n2
+    else                        
+        return n3
+  end
+end 
+
+print "Please Enter the 1st Number="
+n1=gets.chomp.to_i
+print "Please Enter the 2nd Number="
+n2=gets.chomp.to_i
+print "Please Enter the 3rd Number="
+n3=gets.chomp.to_i
+
+num=greatestNum(n1,n2,n3)
+puts "The greatest Number of Three=#{num}"
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Please Enter the 1st Number=30
+Please Enter the 2nd Number=70
+Please Enter the 3rd Number=60
+The greatest Number of Three=70
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+6. Write a Ruby script to print odd numbers from 10 to 1
+
+puts "Odd number from 10 to 1 are:"
+(1..10).reverse_each do
+|num|
+    puts num if num.odd?
+end    
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Odd number from 10 to 1 are:
+9
+7
+5
+3
+1
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+7. Write a Ruby scirpt to check two integers and return true if one of them is 20 otherwise return 
+their sum
+
+def checkAnyNumIs20Exist(n1,n2)
+    if(n1==20 || n2==20)        
+        true
+    else                        
+        n1+n2
+  end
+end 
+print "Please Enter the 1st Number="
+n1=gets.chomp.to_i
+print "Please Enter the 2nd Number="
+n2=gets.chomp.to_i
+
+res=checkAnyNumIs20Exist(n1,n2)
+print "Result:",res
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+CASE 1:
+Please Enter the 1st Number=20
+Please Enter the 2nd Number=30
+Result:true
+
+CASE 2:
+Please Enter the 1st Number=30
+Please Enter the 2nd Number=40
+Result:70
+-----------------------------------------------------------------------------------------------------------------------------------------
+8. Write a Ruby script to check two temperatures and return true if one is less than 0 and the other 
+is greater than 100
+
+def checkTemp(t1,t2)
+    if(t1<0 && t2>100) || (t2<0 && t1>100)         
+        true
+    else                        
+        false
+   end
+end 
+print "Please Enter the 1st Temperature="
+t1=gets.chomp.to_i
+print "Please Enter the 2nd Temperature="
+t2=gets.chomp.to_i
+
+res=checkTemp(t1,t2)
+print "Result:",res
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+CASE 1:
+Please Enter the 1st Temperature=-3
+Please Enter the 2nd Temperature=120
+Result:true
+
+CASE 2:
+Please Enter the 1st Temperature=2
+Please Enter the 2nd Temperature=75
+Result:false
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+9. Write a Ruby script to print the elements of a given array
+
+def readArr(arr,n)
+   for i in (0..n-1)
+     print"Element ",i+1,"="
+     arr[i]=gets.chomp.to_i
+   end
+end
+def printArr(arr,n)
+    for i in (0..n-1)
+      print arr[i],"\t"
+    end
+ end
+print"Enter the size of array="
+n=gets.chomp.to_i
+arr=[]
+readArr(arr,n)
+puts "Array elements are:"
+printArr(arr,n)
+
+puts "\nSize of arr is:#{arr.size}"
+puts "Size of length is:#{arr.length}"
+puts "Size of first is:#{arr.first}"
+puts "Size of last is:#{arr.last}"
+puts "Unquie ele:#{arr.uniq}"
+puts "without Destruction:#{arr}"
+arr.uniq!
+puts "with Destruction:#{arr}"
+puts "Push ele:#{arr.push(7)}"
+puts "Pop ele:#{arr.pop}"
+puts "Unshift ele:#{arr.unshift(1)}"
+puts "shift ele:#{arr.shift()}"
+puts "Sort ele:#{arr.sort}"
+puts "insert ele:#{arr.insert(2,5,6)}"
+puts "delete ele:#{arr.delete(5)}"
+puts "slice ele:#{arr.slice(0,3)}"
+puts "reverse ele:#{arr.reverse!}"
+puts "clear ele:#{arr.clear()}"
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+PS D:\scriptPrgm\ruby> cd "d:\scriptPrgm\ruby"
+PS D:\scriptPrgm\ruby> ruby "d:\scriptPrgm\ruby\printArr.rb"
+
+Enter the size of array=4
+Element 1=5
+Element 2=7
+Element 3=6
+Element 4=9
+Array elements are:
+5       7       6       9
+Size of arr is:4
+Size of length is:4
+Size of first is:5
+Size of last is:9
+Unquie ele:[5, 7, 6, 9]
+without Destruction:[5, 7, 6, 9]
+with Destruction:[5, 7, 6, 9]
+Push ele:[5, 7, 6, 9, 7]
+Pop ele:7
+Unshift ele:[1, 5, 7, 6, 9]
+shift ele:1
+Sort ele:[5, 6, 7, 9]
+insert ele:[5, 7, 5, 6, 6, 9]
+delete ele:5
+slice ele:[7, 6, 6]
+reverse ele:[9, 6, 6, 7]
+clear ele:[]
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+10. Write a Ruby program to retrieve the total marks where subject name and marks of a student 
+stored in a hash 
+
+# hash table key=>value
+studMarks={}
+
+puts "Enter no.of the subjects:"
+n=gets.chomp.to_i
+n.times do 
+  puts "Enter subject name:"
+  sub=gets.chomp.to_s
+  puts "Enter #{sub} Marks:"
+  mrk=gets.chomp.to_i
+  studMarks[sub]=mrk
+end
+
+tolMrk=studMarks.values.sum
+print "Total marks of all subject is: #{tolMrk}"
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter no.of the subjects:
+3
+Enter subject name:
+Maths
+Enter Maths Marks:
+75
+Enter subject name:
+Physic
+Enter Physic Marks:
+74
+Enter subject name:
+Graphic
+Enter Graphic Marks:
+75
+Total marks of all subject is: 224
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+11. Write a TCL script to find the factorial of a number
+
+puts "Enter a number:"
+set num [gets stdin]
+set res 1
+for {set i 1} {$i <= $num} {set i [expr $i+1]} {
+    set res [expr $res*$i]
+}
+puts -nonewline "Factorial value="
+puts $res
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+C:\Users\Dell\OneDrive\Desktop\SLlab>tclsh calFact.tcl
+Enter a number:
+5
+Factorial value=120
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+12. Write a TCL script that multiplies the numbers from 1 to 10 ?
+
+puts "Enter a number:"
+set num [gets stdin]
+set res 0
+for {set i 1} {$i <= 10} {set i [expr $i+1]} {
+    puts -nonewline $num
+    puts -nonewline "X"
+    puts -nonewline $i
+    puts -nonewline "="
+    set res [expr $num*$i]
+    puts $res
+}
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter a number:
+9
+9X1=9
+9X2=18
+9X3=27
+9X4=36
+9X5=45
+9X6=54
+9X7=63
+9X8=72
+9X9=81
+9X10=90
+-----------------------------------------------------------------------------------------------------------------------------------------
+13. Write a TCL script for Sorting a list using a comparison function
+
+proc readInput {List1 num} {
+    for {set i 1} {$i <= $num} {set i [expr $i+1]} {
+        puts "enter string-$i:"
+        set  ele [gets stdin]
+       lappend List1 $ele
+      }
+  return $List1
+}
+proc CompFun {List1} {
+  set List1 [lsort $List1]  
+  return $List1
+}
+proc PrintOutput  {List1} {
+    foreach item $List1 {
+     puts -nonewline "$item\t"
+   }
+   return $List1
+}
+set List1 []
+
+puts "Enter the no of string:"
+set num [gets stdin]
+puts "Enter the strings:"
+set List1 [readInput $List1 $num]
+set List1 [CompFun  $List1]
+puts "Elements sorted in list:"
+set List1 [PrintOutput  $List1]
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter the no of string:
+4
+Enter the strings:
+enter string-1:
+Varun
+enter string-2:
+Karthik
+enter string-3:
+Sriram
+enter string-4:
+Charry
+Elements sorted in list:
+Charry  Karthik Sriram  Varun
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+14. Write a TCL script to (i)create a list (ii)append elements to the list (iii)Traverse the list 
+(iv)Concatenate the list
+
+
+proc AppendList {List1 num} {
+    for {set i 1} {$i <= $num} {set i [expr $i+1]} {
+        puts "enter string-$i:"
+        set  ele [gets stdin]
+       lappend List1 $ele
+      }
+  return $List1
+}
+proc travList  {List1} {
+    foreach item $List1 {
+     puts -nonewline "$item\t"
+   }
+   return $List1
+}
+
+# (i) Create a list
+set List1 [] 
+set List2 []
+
+# (ii) Append elements to the list
+puts "Enter the no of append Ele:"
+set num1 [gets stdin]
+puts "Enter the strings:"
+set List1 [ AppendList $List1 $num1]
+
+# (iii) Traverse the list
+puts "Elements Traverse in list:"
+set List1 [travList  $List1]
+puts "\n"
+
+# (iv) Concatenate the list with another list
+puts "Enter the size of list2 :"
+set num2 [gets stdin]
+puts "Enter the strings:"
+set List2 [ AppendList $List2 $num2]
+set concList [concat $List1 $List2]
+puts "Concatenated list: $concList"
+
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+PS C:\Users\Dell\OneDrive\Documents\SLlab> tclsh listOpr.tcl
+Enter the no of append Ele:
+2
+Enter the strings:
+enter string-1:
+apple
+enter string-2:
+banana
+Elements Traverse in list:
+apple   banana
+
+Enter the size of list2 :
+2
+Enter the strings:
+enter string-1:
+cherry
+enter string-2:
+grape
+Concatenated list: apple banana cherry grape
+-----------------------------------------------------------------------------------------------------------------------------------------
+15. Write a TCL script to comparing the file modified times ?
+
+puts "Enter the first file name:"
+set file1 [gets stdin]
+puts "Enter the second file name:"
+set file2 [gets stdin]
+
+# Get the modified times of the files
+set time1 [file mtime $file1]
+set time2 [file mtime $file2]
+
+# Compare the modified times
+if {$time1 == $time2} {
+    puts "The files have the same modified time."
+} elseif {$time1 > $time2} {
+    puts "$file1 has been modified more recently than $file2."
+} else {
+    puts "$file2 has been modified more recently than $file1."
+}
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+C:\Users\Dell\OneDrive\Documents\SLlab>tclsh a.tcl
+Enter the first file name:
+one.txt
+Enter the second file name:
+two.txt
+The files have the same modified time.
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+16. Write a TCL script to Copy a file and translate to native format.
+
+set f1 [open "one.txt" w]
+puts "Enter the no of line:"
+set num [gets stdin]
+puts "Enter the Data:"
+for {set i 1} {$i <= $num} {set i [expr $i+1]} {
+    set line [gets stdin]
+    puts $f1 $line
+}
+puts "success to written"
+close $f1 
+set f3 [open "one.txt" r]
+set f2 [open "two.txt" w]
+gets $f3 line
+while {![eof $f3]} {
+    puts $f2 $line
+    gets $f3 line
+}
+puts "success to copied"
+close $f2  
+close $f3      
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter the no of line:
+3
+Enter the Data:
+Hi,This is B.jaipal
+CSE III Year
+JNTUHCES Sultanpur
+success to written
+success to copied
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+17. a) Write a Perl script to find the largest number among three numbers.
+    b) Write a Perl script to print the multiplication tables from 1-10 using subroutines
+
+
+a) Find the largest number among three numbers:
+   perl
+
+use strict;
+use warnings;
+
+print "Enter the 1st number: ";
+chomp(my $num1 = <STDIN>);
+print "Enter the 2nd number: ";
+chomp(my $num2 = <STDIN>);
+print "Enter the 3rd number: ";
+chomp(my $num3 = <STDIN>);
+
+my $largest = $num1;
+if ($num2 > $largest) {
+    $largest = $num2;
+}
+if ($num3 > $largest) {
+    $largest = $num3;
+}
+
+if($num1==$num2 && $num2==$num3){
+   print "All the numbers are equal";
+}   
+else{
+   print "The largest number is: $largest\n";
+}
+OUTPUT:--------------------------------------------------------------------------------------------------------------------------------
+CASE 1:
+Enter the first number: 24
+Enter the second number:56
+Enter the third number: 73
+The largest number is: 73
+
+CASE 2:
+Enter the first number: 60
+Enter the second number:60
+Enter the third number: 60
+All the numbers are equal
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+b) Print the multiplication tables from 1-10 using subroutines:
+perl
+
+use strict;
+use warnings;
+
+sub print_multiplication_table {
+    my ($num) = @_;
+    for my $i (1..10) {
+        my $res=$num*$i;
+        print "$num x $i = $res\n";
+    }
+}
+
+for my $i (1..10) {
+    print_multiplication_table($i);
+    print "\n";
+}
+ 
+OUTPUT:--------------------------------------------------------------------------------------------------------------------------------
+
+1 x 1 = 1	2 x 1 = 2	10 x 1 = 10
+1 x 2 = 2	2 x 2 = 4	10 x 2 = 20
+1 x 3 = 3	2 x 3 = 6	10 x 3 = 30
+1 x 4 = 4	2 x 4 = 8	10 x 4 = 40
+1 x 5 = 5	2 x 5 = 10	10 x 5 = 50
+1 x 6 = 6	2 x 6 = 12	10 x 6 = 60
+1 x 7 = 7	2 x 7 = 14	10 x 7 = 70
+1 x 8 = 8	2 x 8 = 16	10 x 8 = 80
+1 x 9 = 9	2 x 9 = 18	10 x 9 = 90
+1 x 10 = 10 	2 x 10 = 20 ...	10 x 10= 100
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+18. Write a Perl program to implement the following list of manipulating functions
+a)Shift
+b)Unshift
+c)Push
+
+use strict;
+use warnings;
+
+#push operation
+print "Enter no.of the push ele=";
+my $n1=<STDIN>;
+my @a=();
+for(my $i=1;$i<=$n1;$i++){
+    print "push ele=";
+    my $ele=<STDIN>;
+    push(@a,$ele);
+}
+print "Original list:\n";
+print @a;
+
+#pop operation
+print "Enter no.of the pop ele=";
+my $n2=<STDIN>;
+for(my $i=1;$i<=$n2;$i++){
+    print "pop ele=",pop(@a);
+}
+print "Updated list:\n";
+print @a;
+
+#unshift operation
+print "Enter no.of the unshift ele=";
+my $n3=<STDIN>;
+for(my $i=1;$i<=$n3;$i++){
+    print "push ele=";
+    my $ele=<STDIN>;
+    unshift(@a,$ele);
+}
+print "Updated list:\n";
+print @a;
+
+#shift operation
+print "Enter no.of the shift ele=";
+my $n4=<STDIN>;
+for(my $i=1;$i<=$n4;$i++){
+    print "shift ele=",shift(@a);
+}
+print "Updated list:\n";
+print @a;
+
+#sort operation
+@a= sort @a;
+print "sorted list:\n";
+print @a;
+
+my $size=@a;
+my $maxIndex=$#a;
+print"size::$size\n";
+print"MaxIndex=$maxIndex\n";
+
+splice(@a,1,2,1..2);
+print"splice:\n";
+print @a;
+
+print "Enter the input string=";
+my $s1=<STDIN>;
+my @str1 = split('-', $s1);
+print "spitted::@str1";
+
+my $str2=join('-',@str1);  
+print "joined::$str2";
+
+my @merge=(@a,@str1);
+print "merged::\n";
+print @merge;
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter no.of the push ele=4
+push ele=501
+push ele=502
+push ele=503
+push ele=504
+Original list:
+501
+502
+503
+504
+Enter no.of the pop ele=1
+pop ele=504
+Updated list:
+501
+502
+503
+Enter no.of the unshift ele=2
+push ele=505
+push ele=506
+Updated list:
+506
+505
+501
+502
+503
+Enter no.of the shift ele=1
+shift ele=506
+Updated list:
+505
+501
+502
+503
+sorted list:
+501
+502
+503
+505
+size::4
+MaxIndex=3
+splice:
+501
+1
+2
+505
+Enter the input string=HI-JNTUH
+spitted::HI JNTUH
+joined::HI-JNTUH
+merged::
+501 1 2 505 HI JNTUH
+-----------------------------------------------------------------------------------------------------------------------------------------
+19. a) Write a Perl script to substitute a word, with another word in a string.
+    b) Write a Perl script to validate IP address and email address.
+
+a) Substitute a word with another word in a string:
+  perl
+
+use strict;
+use warnings;
+
+my $string = "The quick brown fox jumps over the lazy dog.";
+my $word_to_replace = "brown";
+my $replacement_word = "red";
+
+$string =~ s/$word_to_replace/$replacement_word/g;
+
+print $string;
+
+--------
+script-2:
+--------
+
+use strict;
+use warnings;
+
+print "Enter the string:";
+my $string = <STDIN>;
+print "Enter the word to Replace:";
+my $wordToReplace = <STDIN> ;
+print "Enter the Replace word:";
+my $replaceWord = <STDIN>;
+
+$string =~ s/$wordToReplace/$replaceWord/g;
+
+print $string;
+
+
+OUTPUT:---------------------------------------------------------------------------------------------------------------------------------
+
+C:\Users\Dell\OneDrive\Documents\SLlab> perl a.pl
+The quick red fox jumps over the lazy dog.
+
+Enter the string:The Box
+Enter the word to Replace:Box
+Enter the Replace word:Ball
+The Ball
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+b) Validate IP address and email address:
+   perl
+use strict;
+use warnings;
+
+print "Enter email:";
+my $email=<STDIN>;
+my @username=split '@',$email;
+if(($username[1])=~/gmail.com/){
+    print "Valid email\n";
+}else{
+    print "Email not valid\n";
+}
+
+print "Enter ip address:";
+my $ip=<STDIN>;
+my $ipValid = 1;
+foreach my $octet (split(/\./, $ip)) {
+    if ($octet < 0 || $octet > 255) {
+        $ipValid = 0;
+        last;
+    }
+}
+if ($ipValid) {
+    print "Valid IP address\n";
+} else {
+    print "Not a valid IP address\n";
+}
+
+
+OUTPUT:---------------------------------------------------------------------------------------------------------------------------------
+
+Enter email:jntuhces@gmail.com
+Valid email
+Enter ip address:192.168.1.1
+Valid IP address
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+20. Write a Perl script to print the file in reverse order using command line arguments
+
+use strict;
+use warnings;
+
+my $filename = $ARGV[0];
+
+open(my $fh, "<", $filename) or die "Could not open file '$filename' $!";
+
+my @lines = <$fh>;
+close($fh);
+
+for my $line (reverse @lines) {
+    print scalar reverse("$line");
+}
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+PS C:\Users\Dell\OneDrive\Documents\SLlab> perl filePrtRevCmd.pl one.txt                                          
+rupnatluS SECHUTNJ
+ raeY III ESC
+lapiaj.B si sihT,iH
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+PS C:\Users\Dell\OneDrive\Documents\SLlab> perl a.pl one.txt
+JNTUHCES Sultanpur
+CSE III Year 
+Hi,This is B.jaipal

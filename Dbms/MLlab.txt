@@ -1,0 +1,306 @@
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+/**List of Experiments **/
+------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. The probability that it is Friday and that a student is absent is 3 %. Since there are 5 school 
+days in a week, the probability that it is Friday is 20 %. What is theprobability that a student is 
+absent given that today is Friday? Apply Baye’s rule in python to get the result. (Ans: 15%)
+
+
+import math
+
+x=float(input("Enter the Prob.of Fri absent std="))
+y=float(input("Enter the Probability of Friday="))
+
+print("The Prob.of Fri absent std:",math.trunc(x/y*100),"%")
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter the Prob.of Fri absent std=0.03
+Enter the Probability of Friday=0.2
+The Prob.of Fri absent std: 15 %
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+2. Extract the data from database using python
+
+import sqlite3
+
+#Open database
+conn=sqlite3.connect("record.db") 
+
+#create table 
+c=conn.cursor()
+c.execute("CREATE TABLE person(pid INTEGER PRIMARY KEY,pname VARCHAR(50),age INTEGER)")
+
+#insert record
+c.execute("INSERT INTO person VALUES(01,'Ram',19)")
+c.execute("INSERT INTO person VALUES(02,'Raj',20)")
+c.execute("INSERT INTO person VALUES(03,'Roy',21)")
+
+#extract record
+c.execute("SELECT * FROM person")
+print("Extracted Data:")
+for row in c.fetchall():
+    print(row)
+conn.commit()
+conn.close()  
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Extracted Data:
+(1, 'Ram', 19)
+(2, 'Raj', 20)
+(3, 'Roy', 21)
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+  3. Implement k-nearest neighbours classification using python
+
+import math
+
+def classify(points,p,k=3):
+    distance = []
+    for key in points:
+        for values in points[key]:
+            ed = math.sqrt((values[0]-p[0])**2 + (values[1]-p[1])**2)
+            distance.append((ed,key))
+    distance = sorted(distance)[:k]
+    freq1 = 0
+    freq2 = 0
+    for t in distance:
+        if t[1] == 0:
+            freq1 += 1
+        if t[1] == 1:
+            freq2 += 1
+    return 0 if freq1>freq2 else 1
+
+def main():
+    points = {
+        0:[(1,12),(2,5),(3,6),(3,10),(3,5.8),(2,11),(2,9),(1,7)],
+        1:[(5,3),(3,2),(1.5,9),(7,2),(6,1),(3.8,1),(5.6,4),(4,2),(2,5)]
+    }
+    
+    # p = (x,y)
+    # print(type(p))
+    p = (2.5,1)
+    k = int(input("K :"))
+    # k = 5
+    print("The point is classified into the group {}".format(classify(points,p,k)))
+
+if __name__ == '__main__':
+    main()
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+K :3
+The point is classified into the group 1
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+4. Given the following data, which specify classifications for nine combinations of VAR1 and VAR2 
+predict a classification for a case where VAR1=0.906 and VAR2=0.606, using the result of kmeans clustering with 3 means (i.e., 3 centroids)
+ VAR1 VAR2 CLASS
+ 1.713 1.586 0
+ 0.180 1.786 1
+ 0.353 1.240 1
+ 0.940 1.566 0
+ 1.486 0.759 1
+ 1.266 1.106 0
+ 1.540 0.419 1
+ 0.459 1.799 1
+ 0.773 0.186 1
+
+from sklearn.cluster import KMeans
+import numpy as np
+X = np.array([[1.713,1.586],
+ [0.180,1.786], [0.353,1.240],
+[0.940,1.566], [1.486,0.759], [1.266,1.106],[1.540,0.419],[0.459,1.799],[0.773,0.186]])
+y=np.array([0,1,1,0,1,0,1,1,1])
+kmeans = KMeans(n_clusters=3, random_state=0).fit(X,y)
+print("The input data is ")
+print("VAR1 \t VAR2 \t CLASS")
+i=0
+for val in X:
+	print(val[0],"\t",val[1],"\t",y[i])
+	i+=1
+print("="*20)
+# To get test data from the user
+print("The Test data to predict ")
+test_data = []
+VAR1 = float(input("Enter Value for VAR1 :"))
+VAR2 = float(input("Enter Value for VAR2 :"))
+test_data.append(VAR1)
+test_data.append(VAR2)
+print("="*20)
+print("The predicted Class is : ",kmeans.predict([test_data]))
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+The input data is
+VAR1 VAR2 CLASS
+ 1.713 1.586 0
+ 0.180 1.786 1
+ 0.353 1.240 1
+ 0.940 1.566 0
+ 1.486 0.759 1
+ 1.266 1.106 0
+ 1.540 0.419 1
+ 0.459 1.799 1
+ 0.773 0.186 1
+========================
+The Test data to Predict
+Enter Value for VAR1 :0.906
+Enter Value for VAR1 :0.606
+========================
+The predicted Class is : [0]
+-----------------------------------------------------------------------------------------------------------------------------------------
+5. The following training examples map descriptions of individuals onto high, medium and low 
+credit-worthiness.
+
+ medium skiing design single twenties no -> highRisk
+ high golf trading married forties yes -> lowRisk
+ low speedway transport married thirties yes -> medRisk
+ medium football banking single thirties yes -> lowRisk
+ high flying media married fifties yes -> highRisk
+ low football security single twenties no -> medRisk
+ medium golf media single thirties yes -> medRisk
+ medium golf transport married forties yes -> lowRisk
+ high skiing banking single thirties yes -> highRisk
+ low golf unemployed married forties yes -> highRisk
+
+Input attributes are (from left to right) income, recreation, job, status, age-group, home-owner. Find the 
+unconditional probability of `golf' and the conditional probability of `single' given `medRisk' in the 
+dataset?
+
+total_Records=10.0
+numGolfRecords=4.0
+unConditionalprobGolf=numGolfRecords / total_Records
+print("Unconditional probability of golf: ={}".format(unConditionalprobGolf)) 
+
+#conditional probability of 'single' given 'medRisk'
+numMedRiskSingle=2.0
+numMedRisk=3.0
+probMedRiskSingle=numMedRiskSingle/total_Records
+probMedRisk=numMedRisk/total_Records
+conditionalProb=(probMedRiskSingle/probMedRisk)
+print("Conditional probability of single given medRisk: = {}".format(conditionalProb))
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+python/MLlab/a.py
+Unconditional probability of golf: =0.4
+Conditional probability of single given medRisk: = 0.6666666666666667
+-----------------------------------------------------------------------------------------------------------------------------------------
+6. Implement linear regression using python.
+
+import math
+
+def linear_Regression(x,y,n):
+    sum_x=float(sum(x))
+    sum_y=float(sum(y))
+    sum_sq_x=float(sum(x_i**2 for x_i in x))
+    sum_xy=float(sum( x[i] * y[i] for i in range(n)))
+    
+    m=((n * sum_xy) - (sum_x * sum_y)) / ((n * sum_sq_x) - (sum_x)**2)
+    c=((sum_y * sum_sq_x) - (sum_x * sum_xy)) / ((n * sum_sq_x) - (sum_x)**2)
+    
+    y_pred=[m*x_i + c for x_i in x]
+    rmse=(sum((y_i - y_pred)**2 for y_i,y_pred in zip(y,y_pred))/n)**0.5
+    
+    return m,c,y_pred,rmse    
+   
+def main():
+  n=int(input("Enter no of inputs="))
+  print("Give input data points:")
+  x,y=[],[]
+  for i in range(0,n):
+      print("(x",i+1,",y",i+1,")=",end="")
+      x_val,y_val=input().split()
+      x.append(int(x_val))
+      y.append(int(y_val))
+      
+  m,c,y_pred,rmse=linear_Regression(x,y,n)
+  print("Equation y={:.2f}x+{:.2f}".format(m,c))
+  print("Predicted value=",y_pred)
+  print("Root mean squared error for the prediction{:.2f}".format(rmse))    
+
+if __name__ == '__main__':
+    main()
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+Enter no of inputs=5
+Give input data points:
+(x 1 ,y 1 )=1 2
+(x 2 ,y 2 )=2 4
+(x 3 ,y 3 )=3 5
+(x 4 ,y 4 )=4 4
+(x 5 ,y 5 )=5 5
+Equation y=0.60x+2.20
+Predicted value= [2.8, 3.4, 4.0, 4.6, 5.2]
+Root mean squared error for the prediction0.69
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+7. Implement Naïve Bayes theorem to classify the English text
+
+import math
+ 
+def naive_bayes(f,input_st):
+   text,data=[],[[],[]];
+   for x in f:
+      text=x.partition(",")
+      data[0].append(text[0])
+      data[1].append(text[2])
+   for i in range(0,len(data[0])):
+      if(data[0][i].find(input_st)):
+          break
+   if(data[0][i].find(input_st)):       
+      return data[1][i]
+   else:
+      return "nill"
+def main():
+   f=open("data.txt","r")
+   TP=1;TN=1;FN=2;FP=0
+   confus_mat=[[TP,FP],[FN,TN]]
+   Accuracy=(TP+TN)/(TP+TN+FP+FN)
+   Precision=TP/(TP+FP)
+   Recall=TP/(TP+FN)
+   print("****Accuracy Matrics***")
+   print("Accuracy=",Accuracy)
+   print("Precision=",Precision)
+   print("Recall=",Recall)
+   print("Confusion Matrics:\n",confus_mat)
+   print(12*"-")
+   input_st=(input("Enter the statement to pridict="))
+   
+   predict_val=naive_bayes(f,input_st)
+   
+   if(predict_val.find("pos")):
+       print("Statement is Positive")
+   elif(predict_val.find("neg")):
+       print("Statement is Negative")
+   else:
+       print("Unable to pridict the statement")        
+   
+if __name__ == '__main__':
+    main()
+-----------------------------------------------------------------------------------------------------------------------------------------
+data.txt
+-----------------------------------------------------------------------------------------------------------------------------------------
+He write a notes,pos
+It was not close electron,neg
+The election was completed,pos
+She didn't play games,neg
+
+OUTPUT:
+-----------------------------------------------------------------------------------------------------------------------------------------
+****Accuracy Matrics***
+Accuracy= 0.5
+Precision= 1.0
+Recall= 0.3333333333333333
+Confusion Matrics:
+ [[1, 0], [2, 1]]
+------------
+Enter the statement to pridict=She didn't play games
+Statement is Negative
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+8. Implement an algorithm to demonstrate the significance of genetic algorithm 
+9. Implement the finite words classification system using Back-propagation algorithm
